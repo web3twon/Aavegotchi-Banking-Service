@@ -3,7 +3,7 @@
 // Contract Information
 const diamondAddress = "0x86935F11C86623deC8a25696E1C19a8659CbF95d";
 
-// Complete EscrowFacet ABI with all required functions
+// EscrowFacet ABI with all required functions
 const escrowFacetABI = [
     // batchDepositERC20
     {
@@ -76,8 +76,10 @@ let contract;
 // DOM Elements
 const connectWalletButton = document.getElementById('connectWallet');
 const walletAddressDisplay = document.getElementById('walletAddress');
+const networkDisplay = document.getElementById('network');
 const facetSelect = document.getElementById('facetSelect');
 const functionsContainer = document.getElementById('functionsContainer');
+const contractAddressDisplay = document.getElementById('contractAddress');
 
 // Event Listener: Connect Wallet
 connectWalletButton.addEventListener('click', connectWallet);
@@ -101,6 +103,10 @@ async function connectWallet() {
         const address = await signer.getAddress();
         walletAddressDisplay.textContent = `Connected: ${address}`;
 
+        // Get network information
+        const network = await provider.getNetwork();
+        networkDisplay.textContent = `${network.name} (${network.chainId})`;
+
         // Initialize contract
         initializeContract();
 
@@ -109,9 +115,12 @@ async function connectWallet() {
 
         // Listen for account changes
         window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+        // Listen for network changes
+        window.ethereum.on('chainChanged', handleChainChanged);
     } catch (error) {
         console.error("Error connecting wallet:", error);
-        alert('Failed to connect wallet.');
+        alert('Failed to connect wallet. See console for details.');
     }
 }
 
@@ -120,6 +129,7 @@ function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
         // MetaMask is locked or no accounts connected
         walletAddressDisplay.textContent = 'Not connected';
+        networkDisplay.textContent = 'Not Connected';
         contract = null;
         functionsContainer.innerHTML = '';
     } else {
@@ -127,6 +137,12 @@ function handleAccountsChanged(accounts) {
         initializeContract();
         loadFunctionForms();
     }
+}
+
+// Function to Handle Network Changes
+async function handleChainChanged(_chainId) {
+    // Reload the page to avoid any inconsistencies
+    window.location.reload();
 }
 
 // Function to Initialize Contract
@@ -246,14 +262,10 @@ async function handleFormSubmit(functionName, params) {
                 if (param.type.startsWith("uint")) {
                     // Convert string numbers to BigNumber
                     value = value.map(item => {
-                        if (ethers.BigNumber.isBigNumber(item)) {
-                            return item;
+                        if (!/^\d+$/.test(item)) {
+                            throw new Error(`Invalid number in ${param.name}: ${item}`);
                         }
-                        if (!isNaN(item)) {
-                            return ethers.BigNumber.from(item);
-                        } else {
-                            throw new Error(`Invalid number in ${param.name}`);
-                        }
+                        return ethers.BigNumber.from(item);
                     });
                 } else if (param.type === "address[]") {
                     // Validate Ethereum addresses

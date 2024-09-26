@@ -2,22 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Web3 DApp Interface</title>
+    <title>Diamond Escrow DApp</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Ethers.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Web3 DApp Interface</h1>
-        <button id="connectWallet">Connect Wallet</button>
+        <header>
+            <h1>Diamond Escrow DApp</h1>
+            <p>Contract Address: <span id="contractAddress">0x86935F11C86623deC8a25696E1C19a8659CbF95d</span></p>
+            <p>Network: <span id="network">Not Connected</span></p>
+        </header>
+
+        <button id="connectWallet" class="connect-btn">Connect Wallet</button>
         <p id="walletAddress">Not connected</p>
 
         <div class="facet-section">
             <label for="facetSelect">Select Facet:</label>
             <select id="facetSelect">
                 <option value="EscrowFacet">EscrowFacet</option>
-                <!-- Add other facets if needed -->
+                <!-- Add other facets here if needed -->
             </select>
         </div>
 
