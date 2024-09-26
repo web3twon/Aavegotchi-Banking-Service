@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <title>Diamond DApp</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Ethers.js CDN with defer -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" defer></script>
-  <!-- Your app.js script should be loaded after Ethers.js -->
+  <!-- Load Ethers.js via CDN with defer -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js" defer></script>
+  <!-- Load app.js after Ethers.js with defer -->
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
     <p>Contract: <span id="contract-address">0x86935F11C86623deC8a25696E1C19a8659CbF95d</span></p>
     <p>Network: <span id="network-name">Not Connected</span></p>
   </div>
-  <button id="connect-wallet" class="button">Connect Wallet1</button>
+  <button id="connect-wallet" class="button">Connect Wallet2</button>
 </header>
 
 <nav>
