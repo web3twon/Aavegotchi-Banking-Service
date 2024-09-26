@@ -304,6 +304,14 @@ function getFacetMethods(facet) {
           { name: '_recipient', type: 'address' },
           { name: '_transferAmount', type: 'uint256' }
         ]
+	  },
+      'batchTransferEscrow': {
+        inputs: [
+          { name: '_tokenIds', type: 'uint256[]' },
+          { name: '_erc20Contracts', type: 'address[]' },
+          { name: '_recipients', type: 'address[]' },
+          { name: '_transferAmounts', type: 'uint256[]' }
+        ]
       },
       'batchDepositERC20': {
         inputs: [
@@ -316,14 +324,6 @@ function getFacetMethods(facet) {
         inputs: [
           { name: '_tokenIds', type: 'uint256[]' },
           { name: '_values', type: 'uint256[]' }
-        ]
-      },
-      'batchTransferEscrow': {
-        inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
-          { name: '_erc20Contracts', type: 'address[]' },
-          { name: '_recipients', type: 'address[]' },
-          { name: '_transferAmounts', type: 'uint256[]' }
         ]
       },
       'depositERC20': {
