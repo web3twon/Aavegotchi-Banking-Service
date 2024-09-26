@@ -2,9 +2,46 @@
 
 // Contract Information
 const diamondAddress = "0x86935F11C86623deC8a25696E1C19a8659CbF95d";
+
+// Complete EscrowFacet ABI with all required functions
 const escrowFacetABI = [
-    // Add the ABI definitions for EscrowFacet functions you intend to use
-    // Example for depositERC20
+    // batchDepositERC20
+    {
+        "inputs": [
+            { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
+            { "internalType": "address[]", "name": "_erc20Contracts", "type": "address[]" },
+            { "internalType": "uint256[]", "name": "_values", "type": "uint256[]" }
+        ],
+        "name": "batchDepositERC20",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    // batchDepositGHST
+    {
+        "inputs": [
+            { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
+            { "internalType": "uint256[]", "name": "_values", "type": "uint256[]" }
+        ],
+        "name": "batchDepositGHST",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    // batchTransferEscrow
+    {
+        "inputs": [
+            { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
+            { "internalType": "address[]", "name": "_erc20Contracts", "type": "address[]" },
+            { "internalType": "address[]", "name": "_recipients", "type": "address[]" },
+            { "internalType": "uint256[]", "name": "_transferAmounts", "type": "uint256[]" }
+        ],
+        "name": "batchTransferEscrow",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    // depositERC20
     {
         "inputs": [
             { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
@@ -16,112 +53,160 @@ const escrowFacetABI = [
         "stateMutability": "nonpayable",
         "type": "function"
     },
-    // Repeat for other functions: batchDepositERC20, batchDepositGHST, batchTransferEscrow, transferEscrow
-    // ...
+    // transferEscrow
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_erc20Contract", "type": "address" },
+            { "internalType": "address", "name": "_recipient", "type": "address" },
+            { "internalType": "uint256", "name": "_transferAmount", "type": "uint256" }
+        ],
+        "name": "transferEscrow",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
 ];
 
-// Initialize Ethers
+// Initialize Ethers.js variables
 let provider;
 let signer;
 let contract;
 
-// Connect Wallet
+// DOM Elements
 const connectWalletButton = document.getElementById('connectWallet');
 const walletAddressDisplay = document.getElementById('walletAddress');
+const facetSelect = document.getElementById('facetSelect');
+const functionsContainer = document.getElementById('functionsContainer');
 
-connectWalletButton.addEventListener('click', async () => {
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            signer = provider.getSigner();
-            const address = await signer.getAddress();
-            walletAddressDisplay.textContent = `Connected: ${address}`;
-            initializeContract();
-            loadFunctionForms();
-        } catch (error) {
-            console.error("User rejected the request.");
-        }
-    } else {
-        alert('MetaMask is not installed. Please install it to use this DApp.');
+// Event Listener: Connect Wallet
+connectWalletButton.addEventListener('click', connectWallet);
+
+// Function to Connect Wallet
+async function connectWallet() {
+    if (typeof window.ethereum === 'undefined') {
+        alert('MetaMask is not installed. Please install MetaMask to use this DApp.');
+        return;
     }
-});
 
-// Initialize Contract with EscrowFacet ABI
+    try {
+        // Request account access
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+        // Initialize provider and signer
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = provider.getSigner();
+
+        // Get wallet address
+        const address = await signer.getAddress();
+        walletAddressDisplay.textContent = `Connected: ${address}`;
+
+        // Initialize contract
+        initializeContract();
+
+        // Load function forms
+        loadFunctionForms();
+
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', handleAccountsChanged);
+    } catch (error) {
+        console.error("Error connecting wallet:", error);
+        alert('Failed to connect wallet.');
+    }
+}
+
+// Function to Handle Account Changes
+function handleAccountsChanged(accounts) {
+    if (accounts.length === 0) {
+        // MetaMask is locked or no accounts connected
+        walletAddressDisplay.textContent = 'Not connected';
+        contract = null;
+        functionsContainer.innerHTML = '';
+    } else {
+        walletAddressDisplay.textContent = `Connected: ${accounts[0]}`;
+        initializeContract();
+        loadFunctionForms();
+    }
+}
+
+// Function to Initialize Contract
 function initializeContract() {
     contract = new ethers.Contract(diamondAddress, escrowFacetABI, signer);
 }
 
-// Load Function Forms
+// Function to Load Function Forms
 function loadFunctionForms() {
-    const functionsContainer = document.getElementById('functionsContainer');
-    functionsContainer.innerHTML = ''; // Clear previous content
+    functionsContainer.innerHTML = ''; // Clear existing forms
 
     // Define the functions and their parameters
     const functions = [
         {
             name: 'batchDepositERC20',
+            selector: '0x467ab5cf',
             params: [
-                { name: '_tokenIds', type: 'uint256[]' },
-                { name: '_erc20Contracts', type: 'address[]' },
-                { name: '_values', type: 'uint256[]' }
+                { name: '_tokenIds', type: 'uint256[]', description: 'Comma-separated token IDs' },
+                { name: '_erc20Contracts', type: 'address[]', description: 'Comma-separated ERC20 contract addresses' },
+                { name: '_values', type: 'uint256[]', description: 'Comma-separated values' }
             ]
         },
         {
             name: 'batchDepositGHST',
+            selector: '0xea20c3c6',
             params: [
-                { name: '_tokenIds', type: 'uint256[]' },
-                { name: '_values', type: 'uint256[]' }
+                { name: '_tokenIds', type: 'uint256[]', description: 'Comma-separated token IDs' },
+                { name: '_values', type: 'uint256[]', description: 'Comma-separated values' }
             ]
         },
         {
             name: 'batchTransferEscrow',
+            selector: '0x2a206f11',
             params: [
-                { name: '_tokenIds', type: 'uint256[]' },
-                { name: '_erc20Contracts', type: 'address[]' },
-                { name: '_recipients', type: 'address[]' },
-                { name: '_transferAmounts', type: 'uint256[]' }
+                { name: '_tokenIds', type: 'uint256[]', description: 'Comma-separated token IDs' },
+                { name: '_erc20Contracts', type: 'address[]', description: 'Comma-separated ERC20 contract addresses' },
+                { name: '_recipients', type: 'address[]', description: 'Comma-separated recipient addresses' },
+                { name: '_transferAmounts', type: 'uint256[]', description: 'Comma-separated transfer amounts' }
             ]
         },
         {
             name: 'depositERC20',
+            selector: '0xb0facab3',
             params: [
-                { name: '_tokenId', type: 'uint256' },
-                { name: '_erc20Contract', type: 'address' },
-                { name: '_value', type: 'uint256' }
+                { name: '_tokenId', type: 'uint256', description: 'Token ID' },
+                { name: '_erc20Contract', type: 'address', description: 'ERC20 contract address' },
+                { name: '_value', type: 'uint256', description: 'Value to deposit' }
             ]
         },
         {
             name: 'transferEscrow',
+            selector: '0xab0fcabf',
             params: [
-                { name: '_tokenId', type: 'uint256' },
-                { name: '_erc20Contract', type: 'address' },
-                { name: '_recipient', type: 'address' },
-                { name: '_transferAmount', type: 'uint256' }
+                { name: '_tokenId', type: 'uint256', description: 'Token ID' },
+                { name: '_erc20Contract', type: 'address', description: 'ERC20 contract address' },
+                { name: '_recipient', type: 'address', description: 'Recipient address' },
+                { name: '_transferAmount', type: 'uint256', description: 'Amount to transfer' }
             ]
         }
     ];
 
-    // Create forms for each function
+    // Generate a form for each function
     functions.forEach(func => {
         const form = document.createElement('form');
         form.id = func.name;
 
         const title = document.createElement('h3');
-        title.textContent = func.name;
+        title.textContent = `${func.name} (${func.selector})`;
         form.appendChild(title);
 
         func.params.forEach(param => {
             const label = document.createElement('label');
-            label.for = param.name;
+            label.htmlFor = param.name;
             label.textContent = `${param.name} (${param.type})`;
             form.appendChild(label);
 
-            const input = document.createElement('input');
-            input.type = 'text';
+            const input = document.createElement('textarea');
             input.id = param.name;
             input.name = param.name;
-            input.placeholder = `Enter ${param.name}`;
+            input.placeholder = param.description;
             form.appendChild(input);
         });
 
@@ -131,6 +216,7 @@ function loadFunctionForms() {
         submitButton.className = 'submit-btn';
         form.appendChild(submitButton);
 
+        // Add event listener for form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             await handleFormSubmit(func.name, func.params);
@@ -140,7 +226,7 @@ function loadFunctionForms() {
     });
 }
 
-// Handle Form Submission
+// Function to Handle Form Submission
 async function handleFormSubmit(functionName, params) {
     if (!contract) {
         alert('Please connect your wallet first.');
@@ -148,7 +234,7 @@ async function handleFormSubmit(functionName, params) {
     }
 
     try {
-        // Gather inputs
+        // Gather and process input values
         const args = params.map(param => {
             const input = document.getElementById(param.name);
             let value = input.value.trim();
@@ -156,11 +242,38 @@ async function handleFormSubmit(functionName, params) {
             if (param.type.endsWith("[]")) {
                 // Convert comma-separated values to array
                 value = value.split(',').map(item => item.trim());
+
                 if (param.type.startsWith("uint")) {
-                    value = value.map(item => ethers.BigNumber.from(item));
+                    // Convert string numbers to BigNumber
+                    value = value.map(item => {
+                        if (ethers.BigNumber.isBigNumber(item)) {
+                            return item;
+                        }
+                        if (!isNaN(item)) {
+                            return ethers.BigNumber.from(item);
+                        } else {
+                            throw new Error(`Invalid number in ${param.name}`);
+                        }
+                    });
+                } else if (param.type === "address[]") {
+                    // Validate Ethereum addresses
+                    value.forEach(address => {
+                        if (!ethers.utils.isAddress(address)) {
+                            throw new Error(`Invalid address in ${param.name}: ${address}`);
+                        }
+                    });
                 }
-            } else if (param.type.startsWith("uint")) {
-                value = ethers.BigNumber.from(value);
+            } else {
+                if (param.type.startsWith("uint")) {
+                    if (!/^\d+$/.test(value)) {
+                        throw new Error(`Invalid number for ${param.name}`);
+                    }
+                    value = ethers.BigNumber.from(value);
+                } else if (param.type === "address") {
+                    if (!ethers.utils.isAddress(value)) {
+                        throw new Error(`Invalid address for ${param.name}: ${value}`);
+                    }
+                }
             }
 
             return value;

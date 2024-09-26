@@ -1,3 +1,5 @@
+/* styles.css */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
@@ -6,25 +8,27 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
     background: white;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
     text-align: center;
+    margin-bottom: 30px;
 }
 
 button {
     background-color: #4CAF50;
     color: white;
-    padding: 10px 24px;
+    padding: 12px 28px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
 }
 
 button:hover {
@@ -32,43 +36,64 @@ button:hover {
 }
 
 .facet-section {
-    margin: 20px 0;
+    margin: 25px 0;
+    display: flex;
+    align-items: center;
 }
 
-label {
-    margin-right: 10px;
+.facet-section label {
+    margin-right: 15px;
+    font-weight: bold;
 }
 
-form {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-form h3 {
-    margin-top: 0;
-}
-
-input, select {
-    width: 100%;
+.facet-section select {
     padding: 8px;
-    margin: 6px 0 12px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-input[type="array"] {
+form {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    background-color: #fafafa;
+}
+
+form h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
     height: 60px;
 }
 
 .submit-btn {
     background-color: #008CBA;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .submit-btn:hover {
@@ -76,6 +101,8 @@ input[type="array"] {
 }
 
 #walletAddress {
-    margin-top: 10px;
+    margin-top: 15px;
     font-weight: bold;
+    color: #333;
+    word-break: break-all;
 }
