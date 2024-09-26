@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* 1. CSS Variables for Colors */
+/* CSS Variables for Colors */
 :root {
   /* Color Palette */
   --color-dark-purple: #1C0124;
@@ -22,7 +22,7 @@
   --transition-speed: 0.3s;
 }
 
-/* 2. Global Styles */
+/* Global Styles */
 body {
   margin: 0;
   font-family: var(--font-family);
@@ -38,9 +38,13 @@ header, nav, main {
 header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   background-color: var(--color-soft-purple);
   border-bottom: 2px solid var(--color-vivid-purple);
+}
+
+.header-left {
+  max-width: 70%;
 }
 
 header h1 {
@@ -54,6 +58,44 @@ header p {
   color: var(--color-light-gray);
 }
 
+/* Aavegotchi Info Styles */
+.aavegotchi-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 0.5rem;
+  color: #edf2f7;
+}
+
+.aavegotchi-info h2 {
+  margin-top: 0;
+  color: #ffcc00;
+}
+
+.aavegotchi-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.aavegotchi-table th,
+.aavegotchi-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #4a5568;
+}
+
+.aavegotchi-table th {
+  background-color: #434c5e;
+  color: #ffcc00;
+}
+
+.aavegotchi-table tr:hover {
+  background-color: #4a5568;
+}
+
+/* Navigation Styles */
 nav {
   background-color: var(--color-dark-purple);
   border-bottom: 1px solid var(--color-vivid-purple);
@@ -71,6 +113,7 @@ nav a:hover {
   color: var(--color-light-pink);
 }
 
+/* Button Styles */
 .button {
   background-color: var(--color-bright-pink);
   color: var(--color-white);
@@ -87,6 +130,7 @@ nav a:hover {
   transform: translateY(-2px);
 }
 
+/* Form Styles */
 .select, .input, .textarea {
   width: 100%;
   padding: 0.75rem;
@@ -118,7 +162,7 @@ nav a:hover {
   border-radius: var(--border-radius);
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all var(--transition-speed); /* Added for smooth transitions */
+  transition: all var(--transition-speed);
 }
 
 .form-container h3 {
@@ -144,10 +188,40 @@ nav a:hover {
   color: var(--color-white);
 }
 
-/* Minor Text Styling */
-.minor-text {
-  color: var(--color-light-gray);
-  font-size: 0.9rem;
+/* Collapsible Header Styles */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.form-header h3 {
+  margin: 0;
+  color: var(--color-light-pink);
+}
+
+.toggle-icon {
+  transition: transform var(--transition-speed);
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-speed) ease-out;
+}
+
+.collapsible-content.expanded {
+  max-height: 1000px; /* Arbitrary high value to allow full expansion */
+  transition: max-height var(--transition-speed) ease-in;
+}
+
+.form-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive Design */
@@ -167,43 +241,13 @@ nav a:hover {
   .form-container {
     padding: 1rem;
   }
-}
 
-/* Collapsible Header Styles */
-.form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
+  .aavegotchi-info {
+    padding: 0.75rem;
+  }
 
-.form-header h3 {
-  margin: 0;
-  color: var(--color-light-pink);
-}
-
-/* Toggle Icon Styles */
-.toggle-icon {
-  transition: transform var(--transition-speed);
-}
-
-.toggle-icon.collapsed {
-  transform: rotate(-90deg);
-}
-
-/* Collapsible Content Styles */
-.collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--transition-speed) ease-out;
-}
-
-.collapsible-content.expanded {
-  max-height: 1000px; /* Arbitrary high value to allow full expansion */
-  transition: max-height var(--transition-speed) ease-in;
-}
-
-/* Change cursor to pointer on hover over headers */
-.form-header:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  .aavegotchi-table th,
+  .aavegotchi-table td {
+    padding: 0.4rem;
+  }
 }

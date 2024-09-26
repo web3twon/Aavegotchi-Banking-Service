@@ -3,9 +3,9 @@
 // Contract Information
 const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d'; // Ensure this is correct
 
-// EscrowFacet ABI with all required functions
-const escrowFacetABI = [
-    // batchDepositERC20
+// Combined ABI: EscrowFacet + AavegotchiFacet
+const combinedABI = [
+    // EscrowFacet Functions
     {
       "inputs": [
         { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
@@ -17,7 +17,6 @@ const escrowFacetABI = [
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    // batchDepositGHST
     {
       "inputs": [
         { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
@@ -28,7 +27,6 @@ const escrowFacetABI = [
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    // batchTransferEscrow
     {
       "inputs": [
         { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
@@ -41,7 +39,6 @@ const escrowFacetABI = [
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    // depositERC20
     {
       "inputs": [
         { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
@@ -53,7 +50,6 @@ const escrowFacetABI = [
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    // transferEscrow
     {
       "inputs": [
         { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
@@ -64,6 +60,45 @@ const escrowFacetABI = [
       "name": "transferEscrow",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    // AavegotchiFacet Functions
+    {
+      "inputs": [
+        { "internalType": "address", "name": "_owner", "type": "address" }
+      ],
+      "name": "allAavegotchisOfOwner",
+      "outputs": [
+        {
+          "components": [
+            { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "internalType": "string", "name": "name", "type": "string" },
+            { "internalType": "address", "name": "owner", "type": "address" },
+            { "internalType": "uint256", "name": "randomNumber", "type": "uint256" },
+            { "internalType": "uint256", "name": "status", "type": "uint256" },
+            { "internalType": "int16[6]", "name": "numericTraits", "type": "int16[6]" },
+            { "internalType": "int16[6]", "name": "modifiedNumericTraits", "type": "int16[6]" },
+            { "internalType": "uint16[16]", "name": "equippedWearables", "type": "uint16[16]" },
+            { "internalType": "address", "name": "collateral", "type": "address" },
+            { "internalType": "address", "name": "escrow", "type": "address" },
+            { "internalType": "uint256", "name": "stakedAmount", "type": "uint256" },
+            { "internalType": "uint256", "name": "minimumStake", "type": "uint256" },
+            { "internalType": "uint256", "name": "kinship", "type": "uint256" },
+            { "internalType": "uint256", "name": "lastInteracted", "type": "uint256" },
+            { "internalType": "uint256", "name": "experience", "type": "uint256" },
+            { "internalType": "uint256", "name": "toNextLevel", "type": "uint256" },
+            { "internalType": "uint256", "name": "usedSkillPoints", "type": "uint256" },
+            { "internalType": "uint256", "name": "level", "type": "uint256" },
+            { "internalType": "uint256", "name": "hauntId", "type": "uint256" },
+            { "internalType": "uint256", "name": "baseRarityScore", "type": "uint256" },
+            { "internalType": "uint256", "name": "modifiedRarityScore", "type": "uint256" }
+          ],
+          "internalType": "struct AavegotchiInfo[]",
+          "name": "aavegotchis",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     }
 ];
@@ -80,6 +115,7 @@ const networkNameDisplay = document.getElementById('network-name');
 const facetSelect = document.getElementById('facet-select');
 const methodFormsContainer = document.getElementById('method-forms');
 const contractAddressDisplay = document.getElementById('contract-address');
+const aavegotchiInfoContainer = document.getElementById('aavegotchi-info'); // New Element
 
 // Event Listeners
 connectWalletButton.addEventListener('click', connectWallet);
@@ -112,13 +148,16 @@ async function connectWallet() {
     networkNameDisplay.innerText = `${capitalizeFirstLetter(network.name)} (${network.chainId})`;
 
     // Initialize contract
-    contract = new ethers.Contract(contractAddress, escrowFacetABI, signer);
+    contract = new ethers.Contract(contractAddress, combinedABI, signer);
 
     // Update button text
     connectWalletButton.innerText = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
 
     // Generate method forms
     generateMethodForms();
+
+    // Fetch and display Aavegotchi info
+    await fetchAndDisplayAavegotchis(address);
 
     // Listen for account changes
     window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -140,6 +179,7 @@ function handleAccountsChanged(accounts) {
     connectWalletButton.innerText = 'Connect Wallet';
     contract = null;
     methodFormsContainer.innerHTML = '';
+    aavegotchiInfoContainer.innerHTML = ''; // Clear Aavegotchi Info
   } else {
     // Reload the page to avoid inconsistent state
     window.location.reload();
@@ -370,6 +410,71 @@ function toggleCollapse(contentElement, iconElement, expand) {
     contentElement.classList.remove('expanded');
     iconElement.classList.add('collapsed');
     iconElement.innerHTML = '&#9660;'; // Downward triangle
+  }
+}
+
+// Function to Fetch and Display Aavegotchis
+async function fetchAndDisplayAavegotchis(ownerAddress) {
+  try {
+    // Call the allAavegotchisOfOwner function
+    const aavegotchis = await contract.allAavegotchisOfOwner(ownerAddress);
+
+    if (aavegotchis.length === 0) {
+      aavegotchiInfoContainer.innerHTML = '<p>No Aavegotchis found for this wallet.</p>';
+      return;
+    }
+
+    // Create a table to display Aavegotchi details
+    const table = document.createElement('table');
+    table.className = 'aavegotchi-table';
+
+    // Create table header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    const headers = ['Token ID', 'Name', 'Escrow Wallet'];
+    headers.forEach(headerText => {
+      const th = document.createElement('th');
+      th.innerText = headerText;
+      headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create table body
+    const tbody = document.createElement('tbody');
+
+    aavegotchis.forEach(aavegotchi => {
+      const row = document.createElement('tr');
+
+      const tokenId = aavegotchi.tokenId.toString();
+      const name = aavegotchi.name;
+      const escrowWallet = aavegotchi.escrow;
+
+      const tokenIdCell = document.createElement('td');
+      tokenIdCell.innerText = tokenId;
+      row.appendChild(tokenIdCell);
+
+      const nameCell = document.createElement('td');
+      nameCell.innerText = name;
+      row.appendChild(nameCell);
+
+      const escrowCell = document.createElement('td');
+      escrowCell.innerText = escrowWallet;
+      row.appendChild(escrowCell);
+
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    // Populate the Aavegotchi Info Container
+    aavegotchiInfoContainer.innerHTML = '<h2>Your Aavegotchis:</h2>';
+    aavegotchiInfoContainer.appendChild(table);
+  } catch (error) {
+    console.error("Error fetching Aavegotchis:", error);
+    aavegotchiInfoContainer.innerHTML = '<p>Error fetching Aavegotchis. See console for details.</p>';
   }
 }
 
