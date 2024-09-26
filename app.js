@@ -74,15 +74,16 @@ let signer;
 let contract;
 
 // DOM Elements
-const connectWalletButton = document.getElementById('connectWallet');
-const walletAddressDisplay = document.getElementById('walletAddress');
-const networkDisplay = document.getElementById('network');
-const facetSelect = document.getElementById('facetSelect');
-const functionsContainer = document.getElementById('functionsContainer');
-const contractAddressDisplay = document.getElementById('contractAddress');
+const connectWalletButton = document.getElementById('connect-wallet');
+const walletInfo = document.getElementById('wallet-info');
+const networkNameDisplay = document.getElementById('network-name');
+const facetSelect = document.getElementById('facet-select');
+const methodFormsContainer = document.getElementById('method-forms');
+const contractAddressDisplay = document.getElementById('contract-address');
 
-// Event Listener: Connect Wallet
+// Event Listeners
 connectWalletButton.addEventListener('click', connectWallet);
+facetSelect.addEventListener('change', generateMethodForms);
 
 // Function to Connect Wallet
 async function connectWallet() {
@@ -101,17 +102,20 @@ async function connectWallet() {
 
         // Get wallet address
         const address = await signer.getAddress();
-        walletAddressDisplay.textContent = `Connected: ${address}`;
+        walletInfo.innerHTML = `<p>Wallet Address: ${address}</p>`;
 
         // Get network information
         const network = await provider.getNetwork();
-        networkDisplay.textContent = `${network.name} (${network.chainId})`;
+        networkNameDisplay.innerText = `${network.name} (${network.chainId})`;
 
         // Initialize contract
-        initializeContract();
+        contract = new ethers.Contract(diamondAddress, escrowFacetABI, signer);
 
-        // Load function forms
-        loadFunctionForms();
+        // Update button text
+        connectWalletButton.innerText = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
+
+        // Generate method forms
+        generateMethodForms();
 
         // Listen for account changes
         window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -119,185 +123,136 @@ async function connectWallet() {
         // Listen for network changes
         window.ethereum.on('chainChanged', handleChainChanged);
     } catch (error) {
-        console.error("Error connecting wallet:", error);
+        console.error(error);
         alert('Failed to connect wallet. See console for details.');
     }
 }
 
-// Function to Handle Account Changes
+// Handle Account Changes
 function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
         // MetaMask is locked or no accounts connected
-        walletAddressDisplay.textContent = 'Not connected';
-        networkDisplay.textContent = 'Not Connected';
+        walletInfo.innerHTML = `<p>Wallet Address: Not connected</p>`;
+        networkNameDisplay.innerText = 'Not Connected';
+        connectWalletButton.innerText = 'Connect Wallet';
         contract = null;
-        functionsContainer.innerHTML = '';
+        methodFormsContainer.innerHTML = '';
     } else {
-        walletAddressDisplay.textContent = `Connected: ${accounts[0]}`;
-        initializeContract();
-        loadFunctionForms();
+        // Reload the page to avoid inconsistent state
+        window.location.reload();
     }
 }
 
-// Function to Handle Network Changes
-async function handleChainChanged(_chainId) {
-    // Reload the page to avoid any inconsistencies
+// Handle Network Changes
+function handleChainChanged(_chainId) {
+    // Reload the page to avoid inconsistent state
     window.location.reload();
 }
 
-// Function to Initialize Contract
-function initializeContract() {
-    contract = new ethers.Contract(diamondAddress, escrowFacetABI, signer);
-}
+// Function to Generate Method Forms
+function generateMethodForms() {
+    methodFormsContainer.innerHTML = ''; // Clear existing forms
 
-// Function to Load Function Forms
-function loadFunctionForms() {
-    functionsContainer.innerHTML = ''; // Clear existing forms
+    if (!contract) {
+        methodFormsContainer.innerHTML = '<p>Please connect your wallet to interact with the contract.</p>';
+        return;
+    }
 
-    // Define the functions and their parameters
-    const functions = [
-        {
-            name: 'batchDepositERC20',
-            selector: '0x467ab5cf',
-            params: [
-                { name: '_tokenIds', type: 'uint256[]', description: 'Comma-separated token IDs' },
-                { name: '_erc20Contracts', type: 'address[]', description: 'Comma-separated ERC20 contract addresses' },
-                { name: '_values', type: 'uint256[]', description: 'Comma-separated values' }
-            ]
-        },
-        {
-            name: 'batchDepositGHST',
-            selector: '0xea20c3c6',
-            params: [
-                { name: '_tokenIds', type: 'uint256[]', description: 'Comma-separated token IDs' },
-                { name: '_values', type: 'uint256[]', description: 'Comma-separated values' }
-            ]
-        },
-        {
-            name: 'batchTransferEscrow',
-            selector: '0x2a206f11',
-            params: [
-                { name: '_tokenIds', type: 'uint256[]', description: 'Comma-separated token IDs' },
-                { name: '_erc20Contracts', type: 'address[]', description: 'Comma-separated ERC20 contract addresses' },
-                { name: '_recipients', type: 'address[]', description: 'Comma-separated recipient addresses' },
-                { name: '_transferAmounts', type: 'uint256[]', description: 'Comma-separated transfer amounts' }
-            ]
-        },
-        {
-            name: 'depositERC20',
-            selector: '0xb0facab3',
-            params: [
-                { name: '_tokenId', type: 'uint256', description: 'Token ID' },
-                { name: '_erc20Contract', type: 'address', description: 'ERC20 contract address' },
-                { name: '_value', type: 'uint256', description: 'Value to deposit' }
-            ]
-        },
-        {
-            name: 'transferEscrow',
-            selector: '0xab0fcabf',
-            params: [
-                { name: '_tokenId', type: 'uint256', description: 'Token ID' },
-                { name: '_erc20Contract', type: 'address', description: 'ERC20 contract address' },
-                { name: '_recipient', type: 'address', description: 'Recipient address' },
-                { name: '_transferAmount', type: 'uint256', description: 'Amount to transfer' }
-            ]
-        }
-    ];
+    const selectedFacet = facetSelect.value;
+    const facetMethods = getFacetMethods(selectedFacet);
 
-    // Generate a form for each function
-    functions.forEach(func => {
+    if (!facetMethods) {
+        methodFormsContainer.innerHTML = '<p>No methods found for the selected facet.</p>';
+        return;
+    }
+
+    // Iterate over each method and create a form
+    for (const methodName in facetMethods) {
+        const method = facetMethods[methodName];
+        const formContainer = document.createElement('div');
+        formContainer.className = 'form-container';
+
+        const formTitle = document.createElement('h3');
+        formTitle.innerText = methodName;
+        formContainer.appendChild(formTitle);
+
         const form = document.createElement('form');
-        form.id = func.name;
+        form.setAttribute('data-method', methodName);
+        form.addEventListener('submit', handleFormSubmit);
 
-        const title = document.createElement('h3');
-        title.textContent = `${func.name} (${func.selector})`;
-        form.appendChild(title);
+        method.inputs.forEach(input => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'form-group';
 
-        func.params.forEach(param => {
             const label = document.createElement('label');
-            label.htmlFor = param.name;
-            label.textContent = `${param.name} (${param.type})`;
-            form.appendChild(label);
+            label.setAttribute('for', input.name);
+            label.innerText = `${input.name} (${input.type}):`;
+            formGroup.appendChild(label);
 
-            const input = document.createElement('textarea');
-            input.id = param.name;
-            input.name = param.name;
-            input.placeholder = param.description;
-            form.appendChild(input);
+            // Determine input type based on parameter type
+            let inputElement;
+            if (input.type === 'address' || input.type === 'uint256') {
+                inputElement = document.createElement('input');
+                inputElement.type = 'text';
+            } else if (input.type.endsWith('[]')) {
+                inputElement = document.createElement('textarea');
+                inputElement.placeholder = 'Enter comma-separated values';
+            } else {
+                inputElement = document.createElement('input');
+                inputElement.type = 'text';
+            }
+
+            inputElement.id = input.name;
+            inputElement.name = input.name;
+            inputElement.className = 'input';
+            formGroup.appendChild(inputElement);
+
+            form.appendChild(formGroup);
         });
 
         const submitButton = document.createElement('button');
         submitButton.type = 'submit';
-        submitButton.textContent = 'Write';
-        submitButton.className = 'submit-btn';
+        submitButton.className = 'button';
+        submitButton.innerText = 'Submit';
         form.appendChild(submitButton);
 
-        // Add event listener for form submission
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await handleFormSubmit(func.name, func.params);
-        });
-
-        functionsContainer.appendChild(form);
-    });
-}
-
-// Function to Handle Form Submission
-async function handleFormSubmit(functionName, params) {
-    if (!contract) {
-        alert('Please connect your wallet first.');
-        return;
-    }
-
-    try {
-        // Gather and process input values
-        const args = params.map(param => {
-            const input = document.getElementById(param.name);
-            let value = input.value.trim();
-
-            if (param.type.endsWith("[]")) {
-                // Convert comma-separated values to array
-                value = value.split(',').map(item => item.trim());
-
-                if (param.type.startsWith("uint")) {
-                    // Convert string numbers to BigNumber
-                    value = value.map(item => {
-                        if (!/^\d+$/.test(item)) {
-                            throw new Error(`Invalid number in ${param.name}: ${item}`);
-                        }
-                        return ethers.BigNumber.from(item);
-                    });
-                } else if (param.type === "address[]") {
-                    // Validate Ethereum addresses
-                    value.forEach(address => {
-                        if (!ethers.utils.isAddress(address)) {
-                            throw new Error(`Invalid address in ${param.name}: ${address}`);
-                        }
-                    });
-                }
-            } else {
-                if (param.type.startsWith("uint")) {
-                    if (!/^\d+$/.test(value)) {
-                        throw new Error(`Invalid number for ${param.name}`);
-                    }
-                    value = ethers.BigNumber.from(value);
-                } else if (param.type === "address") {
-                    if (!ethers.utils.isAddress(value)) {
-                        throw new Error(`Invalid address for ${param.name}: ${value}`);
-                    }
-                }
-            }
-
-            return value;
-        });
-
-        // Send transaction
-        const tx = await contract[functionName](...args);
-        alert(`Transaction submitted: ${tx.hash}`);
-        await tx.wait();
-        alert('Transaction confirmed!');
-    } catch (error) {
-        console.error(error);
-        alert(`Error: ${error.message || error}`);
+        formContainer.appendChild(form);
+        methodFormsContainer.appendChild(formContainer);
     }
 }
+
+// Function to Get Methods for a Facet
+function getFacetMethods(facet) {
+    const facets = {
+        'EscrowFacet': {
+            'batchDepositERC20': {
+                inputs: [
+                    { name: '_tokenIds', type: 'uint256[]' },
+                    { name: '_erc20Contracts', type: 'address[]' },
+                    { name: '_values', type: 'uint256[]' }
+                ]
+            },
+            'batchDepositGHST': {
+                inputs: [
+                    { name: '_tokenIds', type: 'uint256[]' },
+                    { name: '_values', type: 'uint256[]' }
+                ]
+            },
+            'batchTransferEscrow': {
+                inputs: [
+                    { name: '_tokenIds', type: 'uint256[]' },
+                    { name: '_erc20Contracts', type: 'address[]' },
+                    { name: '_recipients', type: 'address[]' },
+                    { name: '_transferAmounts', type: 'uint256[]' }
+                ]
+            },
+            'depositERC20': {
+                inputs: [
+                    { name: '_tokenId', type: 'uint256' },
+                    { name: '_erc20Contract', type: 'address' },
+                    { name: '_value', type: 'uint256' }
+                ]
+            },
+            'transferEscrow': {
+                inputs: [
+                    {
