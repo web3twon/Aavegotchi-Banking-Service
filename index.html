@@ -4,44 +4,12 @@
   <meta charset="UTF-8">
   <title>Diamond DApp</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Load Ethers.js via CDN with defer -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js" defer></script>
-  <!-- Load app.js after Ethers.js with defer -->
-  <script src="app.js" defer></script>
+  <!-- Load Ethers.js UMD build via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <!-- Load app.js after Ethers.js -->
+  <script src="app.js"></script>
 </head>
 <body>
-
-<header>
-  <div>
-    <h1>Diamond DApp</h1>
-    <p>Contract: <span id="contract-address">0x86935F11C86623deC8a25696E1C19a8659CbF95d</span></p>
-    <p>Network: <span id="network-name">Not Connected</span></p>
-  </div>
-  <button id="connect-wallet" class="button">Connect Wallet6</button>
-</header>
-
-<nav>
-  <a href="#">Home</a>
-  <a href="https://eips.ethereum.org/EIPS/eip-2535" target="_blank">Diamond Standard (EIP-2535)</a>
-  <a href="https://github.com/" target="_blank">GitHub</a>
-  <a href="https://discord.com/" target="_blank">Discord</a>
-</nav>
-
-<main>
-  <div id="wallet-info"></div>
-
-  <div class="form-group">
-    <label for="facet-select">Select Facet:</label>
-    <select id="facet-select" class="select">
-      <option value="EscrowFacet">EscrowFacet</option>
-      <!-- Add more facets if needed -->
-    </select>
-  </div>
-
-  <div id="method-forms">
-    <!-- Method forms will be dynamically inserted here -->
-  </div>
-</main>
-
+  <!-- Your existing HTML content -->
 </body>
 </html>
