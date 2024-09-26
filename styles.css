@@ -118,6 +118,7 @@ nav a:hover {
   border-radius: var(--border-radius);
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-speed); /* Added for smooth transitions */
 }
 
 .form-container h3 {
@@ -166,4 +167,43 @@ nav a:hover {
   .form-container {
     padding: 1rem;
   }
+}
+
+/* Collapsible Header Styles */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.form-header h3 {
+  margin: 0;
+  color: var(--color-light-pink);
+}
+
+/* Toggle Icon Styles */
+.toggle-icon {
+  transition: transform var(--transition-speed);
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Collapsible Content Styles */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-speed) ease-out;
+}
+
+.collapsible-content.expanded {
+  max-height: 1000px; /* Arbitrary high value to allow full expansion */
+  transition: max-height var(--transition-speed) ease-in;
+}
+
+/* Change cursor to pointer on hover over headers */
+.form-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }

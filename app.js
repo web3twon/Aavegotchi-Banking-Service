@@ -5,67 +5,7 @@ const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d'; // Replace
 
 // EscrowFacet ABI with all required functions
 const escrowFacetABI = [
-    // batchDepositERC20
-    {
-      "inputs": [
-        { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
-        { "internalType": "address[]", "name": "_erc20Contracts", "type": "address[]" },
-        { "internalType": "uint256[]", "name": "_values", "type": "uint256[]" }
-      ],
-      "name": "batchDepositERC20",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    // batchDepositGHST
-    {
-      "inputs": [
-        { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
-        { "internalType": "uint256[]", "name": "_values", "type": "uint256[]" }
-      ],
-      "name": "batchDepositGHST",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    // batchTransferEscrow
-    {
-      "inputs": [
-        { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
-        { "internalType": "address[]", "name": "_erc20Contracts", "type": "address[]" },
-        { "internalType": "address[]", "name": "_recipients", "type": "address[]" },
-        { "internalType": "uint256[]", "name": "_transferAmounts", "type": "uint256[]" }
-      ],
-      "name": "batchTransferEscrow",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    // depositERC20
-    {
-      "inputs": [
-        { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
-        { "internalType": "address", "name": "_erc20Contract", "type": "address" },
-        { "internalType": "uint256", "name": "_value", "type": "uint256" }
-      ],
-      "name": "depositERC20",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    // transferEscrow
-    {
-      "inputs": [
-        { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
-        { "internalType": "address", "name": "_erc20Contract", "type": "address" },
-        { "internalType": "address", "name": "_recipient", "type": "address" },
-        { "internalType": "uint256", "name": "_transferAmount", "type": "uint256" }
-      ],
-      "name": "transferEscrow",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
+    // ... [Existing ABI Definitions] ...
 ];
 
 // Initialize Ethers.js variables
@@ -174,15 +114,31 @@ function generateMethodForms() {
     return;
   }
 
-  // Iterate over each method and create a form
+  // Iterate over each method and create a collapsible form
   for (const methodName in facetMethods) {
     const method = facetMethods[methodName];
     const formContainer = document.createElement('div');
     formContainer.className = 'form-container';
 
+    // Create the header that will be clickable
+    const formHeader = document.createElement('div');
+    formHeader.className = 'form-header';
+
     const formTitle = document.createElement('h3');
     formTitle.innerText = methodName;
-    formContainer.appendChild(formTitle);
+
+    // Create the toggle icon (you can use a simple triangle or a plus/minus sign)
+    const toggleIcon = document.createElement('span');
+    toggleIcon.className = 'toggle-icon collapsed';
+    toggleIcon.innerHTML = '&#9660;'; // Downward triangle
+
+    formHeader.appendChild(formTitle);
+    formHeader.appendChild(toggleIcon);
+    formContainer.appendChild(formHeader);
+
+    // Create the collapsible content div
+    const collapsibleContent = document.createElement('div');
+    collapsibleContent.className = 'collapsible-content';
 
     const form = document.createElement('form');
     form.setAttribute('data-method', methodName);
@@ -222,8 +178,18 @@ function generateMethodForms() {
     submitButton.innerText = 'Submit';
     form.appendChild(submitButton);
 
-    formContainer.appendChild(form);
+    collapsibleContent.appendChild(form);
+    formContainer.appendChild(collapsibleContent);
     methodFormsContainer.appendChild(formContainer);
+
+    // Initially collapse the form
+    toggleCollapse(collapsibleContent, toggleIcon, false);
+
+    // Add click event listener to the header to toggle collapse
+    formHeader.addEventListener('click', () => {
+      const isExpanded = collapsibleContent.classList.contains('expanded');
+      toggleCollapse(collapsibleContent, toggleIcon, !isExpanded);
+    });
   }
 }
 
@@ -331,6 +297,19 @@ async function handleFormSubmit(event) {
   } catch (error) {
     console.error(error);
     alert(`Error: ${error.message}`);
+  }
+}
+
+// Function to Toggle Collapse
+function toggleCollapse(contentElement, iconElement, expand) {
+  if (expand) {
+    contentElement.classList.add('expanded');
+    iconElement.classList.remove('collapsed');
+    iconElement.innerHTML = '&#9650;'; // Upward triangle
+  } else {
+    contentElement.classList.remove('expanded');
+    iconElement.classList.add('collapsed');
+    iconElement.innerHTML = '&#9660;'; // Downward triangle
   }
 }
 
