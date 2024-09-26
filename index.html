@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web3 DApp</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Ethers.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Web3 DApp Interface</h1>
+        <button id="connectWallet">Connect Wallet</button>
+        <p id="walletAddress">Not connected</p>
+
+        <div class="facet-section">
+            <label for="facetSelect">Select Facet:</label>
+            <select id="facetSelect">
+                <option value="EscrowFacet">EscrowFacet</option>
+                <!-- Add other facets if needed -->
+            </select>
+        </div>
+
+        <div id="functionsContainer">
+            <!-- Function forms will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
