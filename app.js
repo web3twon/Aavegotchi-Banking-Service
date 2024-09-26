@@ -316,4 +316,27 @@ async function handleFormSubmit(event) {
           value = ethers.BigNumber.from(value);
         } else if (input.type.startsWith('address')) {
           if (!ethers.utils.isAddress(value)) {
-         
+            throw new Error(`Invalid address for ${input.name}: ${value}`);
+          }
+        }
+      }
+      args.push(value);
+    }
+
+    // Call the contract method
+    const tx = await contract[methodName](...args);
+    alert(`Transaction submitted. Hash: ${tx.hash}`);
+    await tx.wait();
+    alert('Transaction confirmed!');
+  } catch (error) {
+    console.error(error);
+    alert(`Error: ${error.message}`);
+  }
+}
+
+// Initial call to generate method forms if the wallet is already connected
+window.onload = async () => {
+  if (window.ethereum && window.ethereum.selectedAddress) {
+    await connectWallet();
+  }
+};
