@@ -1,11 +1,71 @@
 // app.js
 
 // Contract Information
-const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d'; // Replace with your contract address if different
+const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d'; // Ensure this is correct
 
 // EscrowFacet ABI with all required functions
 const escrowFacetABI = [
-    // ... [Existing ABI Definitions] ...
+    // batchDepositERC20
+    {
+      "inputs": [
+        { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
+        { "internalType": "address[]", "name": "_erc20Contracts", "type": "address[]" },
+        { "internalType": "uint256[]", "name": "_values", "type": "uint256[]" }
+      ],
+      "name": "batchDepositERC20",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    // batchDepositGHST
+    {
+      "inputs": [
+        { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
+        { "internalType": "uint256[]", "name": "_values", "type": "uint256[]" }
+      ],
+      "name": "batchDepositGHST",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    // batchTransferEscrow
+    {
+      "inputs": [
+        { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" },
+        { "internalType": "address[]", "name": "_erc20Contracts", "type": "address[]" },
+        { "internalType": "address[]", "name": "_recipients", "type": "address[]" },
+        { "internalType": "uint256[]", "name": "_transferAmounts", "type": "uint256[]" }
+      ],
+      "name": "batchTransferEscrow",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    // depositERC20
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+        { "internalType": "address", "name": "_erc20Contract", "type": "address" },
+        { "internalType": "uint256", "name": "_value", "type": "uint256" }
+      ],
+      "name": "depositERC20",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    // transferEscrow
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+        { "internalType": "address", "name": "_erc20Contract", "type": "address" },
+        { "internalType": "address", "name": "_recipient", "type": "address" },
+        { "internalType": "uint256", "name": "_transferAmount", "type": "uint256" }
+      ],
+      "name": "transferEscrow",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
 ];
 
 // Initialize Ethers.js variables
