@@ -207,4 +207,113 @@ function generateMethodForms() {
         inputElement.type = 'text';
         inputElement.className = 'input';
         inputElement.placeholder = input.type.startsWith('address') ? '0x...' : '';
-  
+      }
+
+      inputElement.id = input.name;
+      inputElement.name = input.name;
+      formGroup.appendChild(inputElement);
+
+      form.appendChild(formGroup);
+    });
+
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.className = 'button';
+    submitButton.innerText = 'Submit';
+    form.appendChild(submitButton);
+
+    formContainer.appendChild(form);
+    methodFormsContainer.appendChild(formContainer);
+  }
+}
+
+// Function to Get Methods for a Facet
+function getFacetMethods(facet) {
+  const facets = {
+    'EscrowFacet': {
+      'batchDepositERC20': {
+        inputs: [
+          { name: '_tokenIds', type: 'uint256[]' },
+          { name: '_erc20Contracts', type: 'address[]' },
+          { name: '_values', type: 'uint256[]' }
+        ]
+      },
+      'batchDepositGHST': {
+        inputs: [
+          { name: '_tokenIds', type: 'uint256[]' },
+          { name: '_values', type: 'uint256[]' }
+        ]
+      },
+      'batchTransferEscrow': {
+        inputs: [
+          { name: '_tokenIds', type: 'uint256[]' },
+          { name: '_erc20Contracts', type: 'address[]' },
+          { name: '_recipients', type: 'address[]' },
+          { name: '_transferAmounts', type: 'uint256[]' }
+        ]
+      },
+      'depositERC20': {
+        inputs: [
+          { name: '_tokenId', type: 'uint256' },
+          { name: '_erc20Contract', type: 'address' },
+          { name: '_value', type: 'uint256' }
+        ]
+      },
+      'transferEscrow': {
+        inputs: [
+          { name: '_tokenId', type: 'uint256' },
+          { name: '_erc20Contract', type: 'address' },
+          { name: '_recipient', type: 'address' },
+          { name: '_transferAmount', type: 'uint256' }
+        ]
+      }
+    }
+    // Add more facets if needed
+  };
+
+  return facets[facet];
+}
+
+// Function to Handle Form Submission
+async function handleFormSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  const methodName = form.getAttribute('data-method');
+  const selectedFacet = facetSelect.value;
+  const facetMethods = getFacetMethods(selectedFacet);
+  const method = facetMethods[methodName];
+  const formData = new FormData(form);
+
+  // Prepare arguments
+  const args = [];
+  try {
+    for (const input of method.inputs) {
+      let value = formData.get(input.name).trim();
+      if (input.type.endsWith('[]')) {
+        // Split by commas and trim whitespace
+        value = value.split(',').map(item => item.trim());
+        if (input.type.startsWith('uint')) {
+          // Convert each to BigNumber
+          value = value.map(item => {
+            if (!/^\d+$/.test(item)) {
+              throw new Error(`Invalid number in ${input.name}: ${item}`);
+            }
+            return ethers.BigNumber.from(item);
+          });
+        } else if (input.type.startsWith('address')) {
+          // Validate each address
+          value.forEach(address => {
+            if (!ethers.utils.isAddress(address)) {
+              throw new Error(`Invalid address in ${input.name}: ${address}`);
+            }
+          });
+        }
+      } else {
+        if (input.type.startsWith('uint')) {
+          if (!/^\d+$/.test(value)) {
+            throw new Error(`Invalid number for ${input.name}`);
+          }
+          value = ethers.BigNumber.from(value);
+        } else if (input.type.startsWith('address')) {
+          if (!ethers.utils.isAddress(value)) {
+         
