@@ -1,84 +1,169 @@
 /* styles.css */
 
+/* 1. CSS Variables for Colors */
+:root {
+  /* Color Palette */
+  --color-dark-purple: #1C0124;
+  --color-vivid-purple: #9D00FF;
+  --color-light-pink: #FFC0CB;
+  --color-soft-purple: #5A0070;
+  --color-bright-blue: #4BD7FF;
+  --color-orange: #FF7400;
+  --color-white: #FFFFFF;
+  --color-bright-pink: #FF00A7;
+  --color-light-gray: #DADADA;
+  --color-vibrant-blue: #0000FF;
+  
+  /* Additional Styling */
+  --font-family: 'Arial', sans-serif;
+  --font-size-base: 16px;
+  --font-size-large: 1.5rem;
+  --border-radius: 0.25rem;
+  --transition-speed: 0.3s;
+}
+
+/* 2. Global Styles */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #1C0124; /* Dark Purple */
-  color: #FFFFFF; /* White */
+  font-family: var(--font-family);
+  background-color: var(--color-dark-purple);
+  color: var(--color-white);
+  font-size: var(--font-size-base);
 }
+
 header, nav, main {
-  padding: 1rem;
+  padding: 1.5rem;
 }
+
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #5A0070; /* Soft Purple */
-  border-bottom: 2px solid #9D00FF; /* Vivid Purple */
+  background-color: var(--color-soft-purple);
+  border-bottom: 2px solid var(--color-vivid-purple);
 }
+
 header h1 {
   margin: 0;
-  font-size: 1.5rem;
-  color: #FFC0CB; /* Light Pink */
+  font-size: var(--font-size-large);
+  color: var(--color-light-pink);
 }
+
+header p {
+  margin: 0.25rem 0;
+  color: var(--color-light-gray);
+}
+
+nav {
+  background-color: var(--color-dark-purple);
+  border-bottom: 1px solid var(--color-vivid-purple);
+}
+
 nav a {
-  margin-right: 1rem;
-  color: #0000FF; /* Vibrant Blue */
+  margin-right: 1.5rem;
+  color: var(--color-vibrant-blue);
   text-decoration: none;
   font-weight: bold;
+  transition: color var(--transition-speed);
 }
+
 nav a:hover {
-  text-decoration: underline;
+  color: var(--color-light-pink);
 }
+
 .button {
-  background-color: #FF00A7; /* Bright Pink */
-  color: #FFFFFF; /* White */
-  padding: 0.5rem 1rem;
-  border: 2px solid #9D00FF; /* Vivid Purple */
-  border-radius: 0.25rem;
+  background-color: var(--color-bright-pink);
+  color: var(--color-white);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
 }
+
 .button:hover {
-  background-color: #FFC0CB; /* Light Pink */
+  background-color: var(--color-vivid-purple);
+  transform: translateY(-2px);
 }
+
 .select, .input, .textarea {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  margin-bottom: 0.5rem;
-  background-color: #5A0070; /* Soft Purple */
-  color: #FFFFFF; /* White */
-  border: 1px solid #9D00FF; /* Vivid Purple */
-  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: var(--color-soft-purple);
+  color: var(--color-white);
+  border: 1px solid var(--color-vivid-purple);
+  border-radius: var(--border-radius);
   box-sizing: border-box;
+  font-size: 1rem;
 }
-.form-group {
-  margin-bottom: 1rem;
+
+.select:focus, .input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-bright-blue);
+  box-shadow: 0 0 5px var(--color-bright-blue);
 }
+
+.form-group label {
+  font-weight: bold;
+  color: var(--color-light-pink);
+}
+
 .form-container {
-  background-color: #5A0070; /* Soft Purple */
-  padding: 1rem;
-  border: 2px solid #9D00FF; /* Vivid Purple */
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: var(--color-soft-purple);
+  padding: 1.5rem;
+  border: 2px solid var(--color-vivid-purple);
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 .form-container h3 {
   margin-top: 0;
-  color: #FFC0CB; /* Light Pink */
-}
-.alert {
-  padding: 0.75rem;
+  color: var(--color-light-pink);
   margin-bottom: 1rem;
-  border-radius: 0.25rem;
 }
+
+.alert {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--border-radius);
+  font-weight: bold;
+}
+
 .alert-success {
-  background-color: #38a169; /* Green (you might want to change this based on your guidelines) */
-  color: #FFFFFF; /* White */
+  background-color: #28a745; /* Green for success */
+  color: var(--color-white);
 }
+
 .alert-error {
-  background-color: #e53e3e; /* Red (you might want to change this based on your guidelines) */
-  color: #FFFFFF; /* White */
+  background-color: #dc3545; /* Red for error */
+  color: var(--color-white);
+}
+
+/* Minor Text Styling */
+.minor-text {
+  color: var(--color-light-gray);
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header, nav, main {
+    padding: 1rem;
+  }
+  
+  nav a {
+    margin-right: 1rem;
+  }
+  
+  .button {
+    padding: 0.5rem 1rem;
+  }
+  
+  .form-container {
+    padding: 1rem;
+  }
 }
