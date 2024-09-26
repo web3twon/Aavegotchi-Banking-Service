@@ -297,6 +297,14 @@ function generateMethodForms() {
 function getFacetMethods(facet) {
   const facets = {
     'EscrowFacet': {
+      'transferEscrow': { // Moved to the top
+        inputs: [
+          { name: '_tokenId', type: 'uint256' },
+          { name: '_erc20Contract', type: 'address' },
+          { name: '_recipient', type: 'address' },
+          { name: '_transferAmount', type: 'uint256' }
+        ]
+      },
       'batchDepositERC20': {
         inputs: [
           { name: '_tokenIds', type: 'uint256[]' },
@@ -323,14 +331,6 @@ function getFacetMethods(facet) {
           { name: '_tokenId', type: 'uint256' },
           { name: '_erc20Contract', type: 'address' },
           { name: '_value', type: 'uint256' }
-        ]
-      },
-      'transferEscrow': {
-        inputs: [
-          { name: '_tokenId', type: 'uint256' },
-          { name: '_erc20Contract', type: 'address' },
-          { name: '_recipient', type: 'address' },
-          { name: '_transferAmount', type: 'uint256' }
         ]
       }
     },
