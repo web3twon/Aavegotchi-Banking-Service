@@ -1,7 +1,7 @@
 // app.js
 
 // Contract Information
-const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d';
+const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d'; // Replace with your contract address if different
 
 // EscrowFacet ABI with all required functions
 const escrowFacetABI = [
@@ -83,7 +83,10 @@ const contractAddressDisplay = document.getElementById('contract-address');
 
 // Event Listeners
 connectWalletButton.addEventListener('click', connectWallet);
-facetSelect.addEventListener('change', generateMethodForms);
+facetSelect.addEventListener('change', (e) => {
+  selectedFacet = e.target.value;
+  generateMethodForms();
+});
 
 // Function to Connect Wallet
 async function connectWallet() {
