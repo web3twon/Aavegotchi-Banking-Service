@@ -15,7 +15,7 @@
   --color-vibrant-blue: #0000FF;
   
   /* Additional Styling */
-  --font-family: 'Roboto', sans-serif;
+  --font-family: 'Arial', sans-serif;
   --font-size-base: 16px;
   --font-size-large: 1.5rem;
   --border-radius: 0.25rem;
@@ -111,54 +111,6 @@ nav a:hover {
   color: var(--color-light-pink);
 }
 
-/* 3. Collapsible Panel Styles */
-.collapsible {
-  background-color: var(--color-soft-purple);
-  color: var(--color-white);
-  cursor: pointer;
-  padding: 1rem;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 1.2rem;
-  transition: background-color var(--transition-speed);
-  border-radius: var(--border-radius);
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.collapsible:hover {
-  background-color: var(--color-vivid-purple);
-}
-
-.collapsible:after {
-  content: '\25BC'; /* Down arrow */
-  font-size: 1rem;
-  transition: transform var(--transition-speed);
-}
-
-.collapsible.active:after {
-  transform: rotate(-180deg); /* Up arrow */
-}
-
-.content {
-  padding: 0 1rem;
-  display: none;
-  overflow: hidden;
-  background-color: var(--color-soft-purple);
-  border-left: 2px solid var(--color-vivid-purple);
-  border-right: 2px solid var(--color-vivid-purple);
-  border-bottom: 2px solid var(--color-vivid-purple);
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-}
-
-.content.show {
-  display: block;
-}
-
 .form-container {
   background-color: var(--color-soft-purple);
   padding: 1.5rem;
@@ -213,9 +165,5 @@ nav a:hover {
   
   .form-container {
     padding: 1rem;
-  }
-  
-  .collapsible {
-    font-size: 1rem;
   }
 }
