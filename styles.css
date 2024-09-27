@@ -118,6 +118,12 @@ nav a {
   transition: color var(--transition-speed);
 }
 
+/* Ensure visited links have the same color as unvisited */
+nav a:visited,
+a:visited {
+  color: var(--color-vibrant-blue);
+}
+
 nav a:hover {
   color: var(--color-light-pink);
 }
@@ -144,6 +150,25 @@ nav a:hover {
 .button:active {
   transform: translateY(0);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Copy Button Styles */
+.copy-button {
+  background: none;
+  border: none;
+  color: var(--color-vibrant-blue);
+  cursor: pointer;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  transition: color var(--transition-speed);
+}
+
+.copy-button:hover {
+  color: var(--color-light-pink);
+}
+
+.copy-button:focus {
+  outline: none;
 }
 
 /* Form Wrapper */
