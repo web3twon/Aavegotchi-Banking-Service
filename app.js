@@ -179,11 +179,29 @@ async function connectWallet() {
     // Get wallet address
     const address = await signer.getAddress();
     userAddress = address; // Assign to global variable
-    walletInfo.innerHTML = `<p>Wallet Address: ${address}</p>`;
+
+    // Update walletInfo with clickable address
+    walletInfo.innerHTML = `
+      <p>Connected Wallet Address: 
+        <a href="https://polygonscan.com/address/${address}" target="_blank" rel="noopener noreferrer">
+          ${address}
+        </a>
+      </p>
+    `;
 
     // Get network information
     const network = await provider.getNetwork();
-    networkNameDisplay.innerText = `${capitalizeFirstLetter(network.name)} (${network.chainId})`;
+    let networkName = 'Unknown';
+    if (network.chainId === 137) {
+      networkName = 'Polygon';
+    } else if (network.chainId === 1) {
+      networkName = 'Ethereum';
+    } else if (network.chainId === 80001) {
+      networkName = 'Mumbai';
+    } else {
+      networkName = capitalizeFirstLetter(network.name);
+    }
+    networkNameDisplay.innerText = `${networkName}`;
 
     // Initialize contracts
     contract = new ethers.Contract(contractAddress, combinedABI, signer);
@@ -213,7 +231,7 @@ async function connectWallet() {
 function handleAccountsChanged(accounts) {
   if (accounts.length === 0) {
     // MetaMask is locked or no accounts connected
-    walletInfo.innerHTML = '<p>Wallet Address: Not connected</p>';
+    walletInfo.innerHTML = '<p>Connected Wallet Address: Not connected</p>';
     networkNameDisplay.innerText = 'Not Connected';
     connectWalletButton.innerText = 'Connect Wallet';
     contract = null;
@@ -802,8 +820,14 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       nameCell.innerText = name;
       row.appendChild(nameCell);
 
+      // Make escrowWallet clickable
       const escrowCell = document.createElement('td');
-      escrowCell.innerText = escrowWallet;
+      const escrowLink = document.createElement('a');
+      escrowLink.href = `https://polygonscan.com/address/${escrowWallet}`;
+      escrowLink.target = '_blank';
+      escrowLink.rel = 'noopener noreferrer';
+      escrowLink.innerText = escrowWallet;
+      escrowCell.appendChild(escrowLink);
       row.appendChild(escrowCell);
 
       const ghstBalanceRaw = balances[index];
