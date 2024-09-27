@@ -154,7 +154,7 @@ const walletInfo = document.getElementById('wallet-info');
 const networkNameDisplay = document.getElementById('network-name');
 // Removed facetSelect
 const methodFormsContainer = document.getElementById('method-forms');
-const contractAddressDisplay = document.getElementById('contract-address');
+const contractAddressDisplay = document.getElementById('contract-address-link'); // Updated to match index.html
 const aavegotchiInfoContainer = document.getElementById('aavegotchi-info'); // New Element
 
 // Event Listeners
@@ -180,12 +180,15 @@ async function connectWallet() {
     const address = await signer.getAddress();
     userAddress = address; // Assign to global variable
 
-    // Update walletInfo with clickable address
+    // Update walletInfo with clickable address and copy button
     walletInfo.innerHTML = `
       <p>Connected Wallet Address: 
         <a href="https://polygonscan.com/address/${address}" target="_blank" rel="noopener noreferrer">
           ${address}
         </a>
+        <button class="copy-button" data-copy-target="${address}" aria-label="Copy Connected Wallet Address">
+          🗐
+        </button>
       </p>
     `;
 
@@ -221,6 +224,9 @@ async function connectWallet() {
 
     // Listen for network changes
     window.ethereum.on('chainChanged', handleChainChanged);
+
+    // Initialize copy button listeners
+    initializeCopyButtons();
   } catch (error) {
     console.error("Error connecting wallet:", error);
     alert('Failed to connect wallet. See console for details.');
@@ -820,7 +826,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       nameCell.innerText = name;
       row.appendChild(nameCell);
 
-      // Make escrowWallet clickable
+      // Make escrowWallet clickable with a copy button
       const escrowCell = document.createElement('td');
       const escrowLink = document.createElement('a');
       escrowLink.href = `https://polygonscan.com/address/${escrowWallet}`;
@@ -828,6 +834,15 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       escrowLink.rel = 'noopener noreferrer';
       escrowLink.innerText = escrowWallet;
       escrowCell.appendChild(escrowLink);
+
+      // Add copy button
+      const copyButton = document.createElement('button');
+      copyButton.className = 'copy-button';
+      copyButton.setAttribute('data-copy-target', escrowWallet);
+      copyButton.setAttribute('aria-label', 'Copy Escrow Wallet Address');
+      copyButton.innerText = '🗐';
+      escrowCell.appendChild(copyButton);
+
       row.appendChild(escrowCell);
 
       const ghstBalanceRaw = balances[index];
@@ -844,10 +859,37 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
     // Populate the Aavegotchi Info Container
     aavegotchiInfoContainer.innerHTML = '<h2>Your Aavegotchis:</h2>';
     aavegotchiInfoContainer.appendChild(table);
+
+    // Initialize copy button listeners for escrow wallets
+    initializeCopyButtons();
   } catch (error) {
     console.error("Error fetching Aavegotchis:", error);
     aavegotchiInfoContainer.innerHTML = '<p>Error fetching Aavegotchis. See console for details.</p>';
   }
+}
+
+// Function to Initialize Copy Button Event Listeners
+function initializeCopyButtons() {
+  const copyButtons = document.querySelectorAll('.copy-button');
+  copyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const addressToCopy = button.getAttribute('data-copy-target');
+      if (!addressToCopy) return;
+
+      navigator.clipboard.writeText(addressToCopy)
+        .then(() => {
+          // Optional: Provide feedback to the user
+          button.innerText = '✅'; // Change icon to indicate success
+          setTimeout(() => {
+            button.innerText = '🗐'; // Revert back after 2 seconds
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy!', err);
+          alert('Failed to copy the address. Please try again.');
+        });
+    });
+  });
 }
 
 // Initial call to generate method forms if the wallet is already connected
