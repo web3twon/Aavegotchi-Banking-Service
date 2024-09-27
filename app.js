@@ -137,6 +137,7 @@ let provider;
 let signer;
 let contract;
 let ghstContract;
+let userAddress; // To store the connected wallet address
 
 // DOM Elements
 const connectWalletButton = document.getElementById('connect-wallet');
@@ -171,6 +172,7 @@ async function connectWallet() {
 
     // Get wallet address
     const address = await signer.getAddress();
+    userAddress = address; // Assign to global variable
     walletInfo.innerHTML = `<p>Wallet Address: ${address}</p>`;
 
     // Get network information
@@ -257,7 +259,13 @@ function generateMethodForms() {
     formHeader.className = 'form-header';
 
     const formTitle = document.createElement('h3');
-    formTitle.innerText = methodName;
+
+    // Update form title based on method
+    if (methodName === 'transferEscrow') {
+      formTitle.innerText = 'TransferEscrow (Withdraw)';
+    } else {
+      formTitle.innerText = methodName;
+    }
 
     // Create the toggle icon (you can use a simple triangle or a plus/minus sign)
     const toggleIcon = document.createElement('span');
@@ -277,12 +285,30 @@ function generateMethodForms() {
     form.addEventListener('submit', handleFormSubmit);
 
     method.inputs.forEach(input => {
+      // Skip '_recipient' field for 'transferEscrow' method
+      if (methodName === 'transferEscrow' && input.name === '_recipient') {
+        return;
+      }
+
       const formGroup = document.createElement('div');
       formGroup.className = 'form-group';
 
       const label = document.createElement('label');
       label.setAttribute('for', input.name);
-      label.innerText = `${input.name} (${input.type}):`;
+
+      // Update labels based on requirements
+      if (methodName === 'transferEscrow') {
+        if (input.name === '_erc20Contract') {
+          label.innerText = 'ERC20 Contract Address:';
+        } else if (input.name === '_transferAmount') {
+          label.innerText = 'Transfer Amount:';
+        } else {
+          label.innerText = `${input.name} (${input.type}):`;
+        }
+      } else {
+        label.innerText = `${input.name} (${input.type}):`;
+      }
+
       formGroup.appendChild(label);
 
       let inputElement;
@@ -329,14 +355,14 @@ function generateMethodForms() {
 function getFacetMethods(facet) {
   const facets = {
     'EscrowFacet': {
-      'transferEscrow': { // Moved to the top
+      'transferEscrow': { // Modified inputs
         inputs: [
           { name: '_tokenId', type: 'uint256' },
           { name: '_erc20Contract', type: 'address' },
-          { name: '_recipient', type: 'address' },
+          // Removed '_recipient'
           { name: '_transferAmount', type: 'uint256' }
         ]
-	  },
+      },
       'batchTransferEscrow': {
         inputs: [
           { name: '_tokenIds', type: 'uint256[]' },
@@ -425,7 +451,7 @@ async function handleFormSubmit(event) {
     for (const input of method.inputs) {
       let value = formData.get(input.name).trim();
       
-      // Check if the input is _transferAmount, _transferAmounts, _value, or _values
+      // Check if the input is _transferAmount or _values (for batchTransferEscrow and batchDepositERC20)
       const isAmountField = ['_transferAmount', '_transferAmounts', '_value', '_values'].includes(input.name);
       
       if (input.type.endsWith('[]')) {
@@ -467,6 +493,17 @@ async function handleFormSubmit(event) {
         }
       }
       args.push(value);
+    }
+
+    // If method is 'transferEscrow', insert the connected wallet address as '_recipient'
+    if (methodName === 'transferEscrow') {
+      // The original 'transferEscrow' expects: _tokenId, _erc20Contract, _recipient, _transferAmount
+      // Currently, args = [_tokenId, _erc20Contract, _transferAmount]
+      // We need to insert 'userAddress' between _erc20Contract and _transferAmount
+      if (!userAddress) {
+        throw new Error('User address not found. Please reconnect your wallet.');
+      }
+      args.splice(2, 0, userAddress); // Insert at index 2
     }
 
     // Call the contract method
