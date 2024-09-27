@@ -237,71 +237,174 @@ function capitalizeFirstLetter(string) {
 
 // Function to Generate Method Forms
 function generateMethodForms() {
-  // Removed methodFormsContainer.innerHTML = ''; to prevent clearing the forms
+  methodFormsContainer.innerHTML = ''; // Clear existing forms
 
   if (!contract) {
     methodFormsContainer.innerHTML = '<p>Please connect your wallet to interact with the contract.</p>';
     return;
   }
 
-  // TransferEscrow (Withdraw) Form - Fully Expanded
-  const transferEscrowForm = document.getElementById('transfer-escrow-form');
-  if (transferEscrowForm) {
-    transferEscrowForm.addEventListener('submit', handleFormSubmit);
-  } else {
-    console.warn("TransferEscrow form not found.");
+  // Since facet selection is removed, we only process 'transferEscrow'
+  const methodName = 'transferEscrow';
+  const method = getFacetMethods('EscrowFacet')[methodName];
+
+  if (!method) {
+    methodFormsContainer.innerHTML = '<p>No methods found for the selected facet.</p>';
+    return;
   }
 
-  // Extra Tools - Collapsible Section
-  const extraToolsHeader = document.querySelector('.form-header');
-  const extraToolsToggleIcon = extraToolsHeader ? extraToolsHeader.querySelector('.toggle-icon') : null;
-  const extraToolsContent = extraToolsHeader ? extraToolsHeader.nextElementSibling : null;
+  const formContainer = document.createElement('div');
+  formContainer.className = 'form-container';
 
-  if (extraToolsHeader && extraToolsToggleIcon && extraToolsContent) {
-    // Add click event listener to toggle the collapsible content
-    extraToolsHeader.addEventListener('click', () => {
-      const isExpanded = extraToolsContent.classList.contains('expanded');
-      toggleCollapse(extraToolsContent, extraToolsToggleIcon, !isExpanded);
-    });
-  } else {
-    console.warn("Extra Tools header or its components not found.");
-  }
+  // Create the header that will be clickable
+  const formHeader = document.createElement('div');
+  formHeader.className = 'form-header';
 
-  // Attach event listeners for "Add Your Own Token" in TransferEscrow form
-  const customErc20AddressGroup = document.getElementById('custom-erc20-address-group');
-  const erc20ContractSelect = document.querySelector('form[data-method="transferEscrow"] select[name="_erc20Contract"]');
-  if (erc20ContractSelect && customErc20AddressGroup) {
-    erc20ContractSelect.addEventListener('change', (e) => {
-      if (e.target.value === 'custom') {
-        customErc20AddressGroup.style.display = 'block';
+  const formTitle = document.createElement('h3');
+  formTitle.innerText = 'TransferEscrow (Withdraw)';
+
+  // Create the toggle icon (you can use a simple triangle or a plus/minus sign)
+  const toggleIcon = document.createElement('span');
+  toggleIcon.className = 'toggle-icon collapsed';
+  toggleIcon.innerHTML = '&#9660;'; // Downward triangle
+
+  formHeader.appendChild(formTitle);
+  formHeader.appendChild(toggleIcon);
+  formContainer.appendChild(formHeader);
+
+  // Create the collapsible content div
+  const collapsibleContent = document.createElement('div');
+  collapsibleContent.className = 'collapsible-content';
+
+  const form = document.createElement('form');
+  form.setAttribute('data-method', methodName);
+  form.addEventListener('submit', handleFormSubmit);
+
+  method.inputs.forEach(input => {
+    // Skip '_tokenId' and '_recipient' fields
+    if (input.name === '_tokenId' || input.name === '_recipient') {
+      return;
+    }
+
+    const formGroup = document.createElement('div');
+    formGroup.className = 'form-group';
+
+    const label = document.createElement('label');
+    label.setAttribute('for', input.name);
+
+    // Update labels based on requirements
+    if (input.name === '_erc20Contract') {
+      label.innerText = 'ERC20 Contract Address:';
+    } else if (input.name === '_transferAmount') {
+      label.innerText = 'Withdraw Amount:';
+    } else {
+      label.innerText = `${input.name} (${input.type}):`;
+    }
+
+    formGroup.appendChild(label);
+
+    let inputElement;
+    if (input.name === '_erc20Contract') {
+      // Create a dropdown for ERC20 Contract Address
+      inputElement = document.createElement('select');
+      inputElement.className = 'select';
+      inputElement.id = input.name;
+      inputElement.name = input.name;
+
+      // Add predefined tokens
+      predefinedTokens.forEach(token => {
+        const option = document.createElement('option');
+        option.value = token.address;
+        option.innerText = token.name;
+        inputElement.appendChild(option);
+      });
+
+      // Add "Add Your Own Token" option
+      const customOption = document.createElement('option');
+      customOption.value = 'custom';
+      customOption.innerText = 'Add Your Own Token';
+      inputElement.appendChild(customOption);
+
+      formGroup.appendChild(inputElement);
+
+      // Create a hidden input for custom ERC20 address
+      const customInput = document.createElement('input');
+      customInput.type = 'text';
+      customInput.className = 'input';
+      customInput.id = 'custom-erc20-address';
+      customInput.name = 'custom-erc20-address';
+      customInput.placeholder = '0x...';
+      customInput.style.display = 'none'; // Hidden by default
+      formGroup.appendChild(customInput);
+
+      // Event listener to show/hide custom ERC20 address input
+      inputElement.addEventListener('change', (e) => {
+        if (e.target.value === 'custom') {
+          customInput.style.display = 'block';
+        } else {
+          customInput.style.display = 'none';
+        }
+      });
+    } else {
+      if (input.type.endsWith('[]')) {
+        inputElement = document.createElement('textarea');
+        inputElement.className = 'textarea';
+        inputElement.placeholder = 'Enter comma-separated values';
       } else {
-        customErc20AddressGroup.style.display = 'none';
+        inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.className = 'input';
+        if (input.type.startsWith('address')) {
+          inputElement.placeholder = '0x...';
+        }
       }
-    });
-  } else {
-    console.warn("TransferEscrow ERC20 contract select or custom address group not found.");
-  }
 
-  // Attach event listeners for "Add Your Own Token" in DepositERC20 form
-  const depositErc20ContractSelect = document.querySelector('form[data-method="depositERC20"] select[name="_erc20Contract"]');
-  const customErc20AddressGroupDeposit = document.getElementById('custom-erc20-address-group-deposit');
-  if (depositErc20ContractSelect && customErc20AddressGroupDeposit) {
-    depositErc20ContractSelect.addEventListener('change', (e) => {
-      if (e.target.value === 'custom') {
-        customErc20AddressGroupDeposit.style.display = 'block';
-      } else {
-        customErc20AddressGroupDeposit.style.display = 'none';
-      }
-    });
-  } else {
-    console.warn("DepositERC20 ERC20 contract select or custom address group not found.");
-  }
+      inputElement.id = input.name;
+      inputElement.name = input.name;
+      formGroup.appendChild(inputElement);
+    }
 
-  // Attach event listeners to Extra Tools forms
-  const extraToolsForms = document.querySelectorAll('.collapsible-content form');
-  extraToolsForms.forEach(form => {
-    form.addEventListener('submit', handleFormSubmit);
+    form.appendChild(formGroup);
   });
+
+  const submitButton = document.createElement('button');
+  submitButton.type = 'submit';
+  submitButton.className = 'button';
+  submitButton.innerText = 'Submit';
+  form.appendChild(submitButton);
+
+  collapsibleContent.appendChild(form);
+  formContainer.appendChild(collapsibleContent);
+  methodFormsContainer.appendChild(formContainer);
+
+  // Initially collapse the form
+  toggleCollapse(collapsibleContent, toggleIcon, false);
+
+  // Add click event listener to the header to toggle collapse
+  formHeader.addEventListener('click', () => {
+    const isExpanded = collapsibleContent.classList.contains('expanded');
+    toggleCollapse(collapsibleContent, toggleIcon, !isExpanded);
+  });
+}
+
+// Function to Get Methods for a Facet
+function getFacetMethods(facet) {
+  const facets = {
+    'EscrowFacet': {
+      'transferEscrow': { // Modified inputs
+        inputs: [
+          { name: '_tokenId', type: 'uint256' },
+          { name: '_erc20Contract', type: 'address' },
+          // Removed '_recipient'
+          { name: '_transferAmount', type: 'uint256' }
+        ]
+      }
+      // Removed other methods for now
+    }
+    // Add more facets if needed
+  };
+
+  return facets[facet];
 }
 
 // Function to Handle Form Submission
@@ -309,8 +412,7 @@ async function handleFormSubmit(event) {
   event.preventDefault();
   const form = event.target;
   const methodName = form.getAttribute('data-method');
-  const selectedFacet = 'EscrowFacet'; // Since facet selection is removed
-  const facetMethods = getFacetMethods(selectedFacet);
+  const facetMethods = getFacetMethods('EscrowFacet');
   const method = facetMethods[methodName];
   const formData = new FormData(form);
 
@@ -319,10 +421,10 @@ async function handleFormSubmit(event) {
   try {
     for (const input of method.inputs) {
       let value = formData.get(input.name)?.trim() || '';
-
+      
       // Check if the input is _transferAmount or _values (for batchTransferEscrow and batchDepositERC20)
       const isAmountField = ['_transferAmount', '_transferAmounts', '_value', '_values'].includes(input.name);
-
+      
       if (input.type.endsWith('[]')) {
         // Split by commas and trim whitespace
         value = value.split(',').map(item => item.trim()).filter(item => item !== '');
@@ -343,7 +445,7 @@ async function handleFormSubmit(event) {
           });
         }
       } else {
-        if (methodName === 'transferEscrow' && input.name === '_erc20Contract') {
+        if (input.name === '_erc20Contract') {
           if (value === 'custom') {
             // Get custom ERC20 address
             const customAddress = formData.get('custom-erc20-address')?.trim();
@@ -351,24 +453,8 @@ async function handleFormSubmit(event) {
               throw new Error('Please provide a valid custom ERC20 contract address.');
             }
             value = customAddress;
-          } else {
-            // Predefined ERC20 address selected
-            // 'value' already contains the selected address
           }
-        }
-
-        if (methodName === 'depositERC20' && input.name === '_erc20Contract') {
-          if (value === 'custom') {
-            // Get custom ERC20 address
-            const customAddress = formData.get('custom-erc20-address-deposit')?.trim();
-            if (!customAddress || !ethers.utils.isAddress(customAddress)) {
-              throw new Error('Please provide a valid custom ERC20 contract address.');
-            }
-            value = customAddress;
-          } else {
-            // Predefined ERC20 address selected
-            // 'value' already contains the selected address
-          }
+          // Else, value already contains the selected ERC20 address
         }
 
         if (isAmountField) {
@@ -401,16 +487,11 @@ async function handleFormSubmit(event) {
     const hardcodedTokenId = ethers.BigNumber.from('15615');
     args.unshift(hardcodedTokenId); // Insert at the beginning
 
-    // If method is 'transferEscrow', insert the connected wallet address as '_recipient'
-    if (methodName === 'transferEscrow') {
-      // The original 'transferEscrow' expects: _tokenId, _erc20Contract, _recipient, _transferAmount
-      // Currently, args = [_tokenId, _erc20Contract, _transferAmount]
-      // We need to insert 'userAddress' between _erc20Contract and _transferAmount
-      if (!userAddress) {
-        throw new Error('User address not found. Please reconnect your wallet.');
-      }
-      args.splice(2, 0, userAddress); // Insert at index 2
-    }
+    // Insert the connected wallet address as '_recipient'
+    // The 'transferEscrow' function expects: _tokenId, _erc20Contract, _recipient, _transferAmount
+    // Currently, args = [_tokenId, _erc20Contract, _transferAmount]
+    // We need to insert 'userAddress' between _erc20Contract and _transferAmount
+    args.splice(2, 0, userAddress); // Insert at index 2
 
     // Call the contract method
     const tx = await contract[methodName](...args);

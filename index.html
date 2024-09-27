@@ -5,7 +5,6 @@
   <title>Gotchi Banking Services</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <header>
@@ -30,125 +29,9 @@
 
   <div class="form-wrapper">
     <!-- Removed Facet Selection Form Group -->
-
+    
     <div id="method-forms">
-      <!-- TransferEscrow (Withdraw) Form -->
-      <div class="form-container">
-        <h3>TransferEscrow (Withdraw)</h3>
-        <form data-method="transferEscrow" id="transfer-escrow-form">
-          <!-- _tokenId is hardcoded to 15615 -->
-          <div class="form-group">
-            <label for="_erc20Contract">ERC20 Contract Address:</label>
-            <select id="_erc20Contract" name="_erc20Contract" class="select">
-              <option value="0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7">GHST</option>
-              <!-- Add more predefined tokens here if needed -->
-              <option value="custom">Add Your Own Token</option>
-            </select>
-          </div>
-          <div class="form-group" id="custom-erc20-address-group" style="display: none;">
-            <label for="custom-erc20-address">Custom ERC20 Contract Address:</label>
-            <input type="text" id="custom-erc20-address" name="custom-erc20-address" class="input" placeholder="0x...">
-          </div>
-          <div class="form-group">
-            <label for="_transferAmount">Withdraw Amount:</label>
-            <input type="text" id="_transferAmount" name="_transferAmount" class="input" placeholder="e.g., 10.5">
-          </div>
-          <button type="submit" class="button">Submit</button>
-        </form>
-      </div>
-
-      <!-- Extra Tools Section -->
-      <div class="form-container">
-        <div class="form-header">
-          <h3>Extra Tools</h3>
-          <span class="toggle-icon collapsed">&#9660;</span> <!-- Downward triangle -->
-        </div>
-        <div class="collapsible-content">
-          <!-- batchTransferEscrow Form -->
-          <div class="form-container">
-            <h3>BatchTransferEscrow</h3>
-            <form data-method="batchTransferEscrow" id="batch-transfer-escrow-form">
-              <div class="form-group">
-                <label for="_tokenIds">_tokenIds (uint256[]):</label>
-                <textarea id="_tokenIds" name="_tokenIds" class="textarea" placeholder="e.g., 1,2,3"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="_erc20Contracts">_erc20Contracts (address[]):</label>
-                <textarea id="_erc20Contracts" name="_erc20Contracts" class="textarea" placeholder="e.g., 0x...,0x...,0x..."></textarea>
-              </div>
-              <div class="form-group">
-                <label for="_recipients">_recipients (address[]):</label>
-                <textarea id="_recipients" name="_recipients" class="textarea" placeholder="e.g., 0x...,0x...,0x..."></textarea>
-              </div>
-              <div class="form-group">
-                <label for="_transferAmounts">_transferAmounts (uint256[]):</label>
-                <textarea id="_transferAmounts" name="_transferAmounts" class="textarea" placeholder="e.g., 10,20,30"></textarea>
-              </div>
-              <button type="submit" class="button">Submit</button>
-            </form>
-          </div>
-
-          <!-- batchDepositERC20 Form -->
-          <div class="form-container">
-            <h3>BatchDepositERC20</h3>
-            <form data-method="batchDepositERC20" id="batch-deposit-erc20-form">
-              <div class="form-group">
-                <label for="_tokenIds">_tokenIds (uint256[]):</label>
-                <textarea id="_tokenIds" name="_tokenIds" class="textarea" placeholder="e.g., 1,2,3"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="_erc20Contracts">_erc20Contracts (address[]):</label>
-                <textarea id="_erc20Contracts" name="_erc20Contracts" class="textarea" placeholder="e.g., 0x...,0x...,0x..."></textarea>
-              </div>
-              <div class="form-group">
-                <label for="_values">_values (uint256[]):</label>
-                <textarea id="_values" name="_values" class="textarea" placeholder="e.g., 100,200,300"></textarea>
-              </div>
-              <button type="submit" class="button">Submit</button>
-            </form>
-          </div>
-
-          <!-- batchDepositGHST Form -->
-          <div class="form-container">
-            <h3>BatchDepositGHST</h3>
-            <form data-method="batchDepositGHST" id="batch-deposit-ghst-form">
-              <div class="form-group">
-                <label for="_tokenIds">_tokenIds (uint256[]):</label>
-                <textarea id="_tokenIds" name="_tokenIds" class="textarea" placeholder="e.g., 1,2,3"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="_values">_values (uint256[]):</label>
-                <textarea id="_values" name="_values" class="textarea" placeholder="e.g., 100,200,300"></textarea>
-              </div>
-              <button type="submit" class="button">Submit</button>
-            </form>
-          </div>
-
-          <!-- depositERC20 Form -->
-          <div class="form-container">
-            <h3>DepositERC20</h3>
-            <form data-method="depositERC20" id="deposit-erc20-form">
-              <div class="form-group">
-                <label for="_erc20Contract">ERC20 Contract Address:</label>
-                <select id="_erc20Contract" name="_erc20Contract" class="select">
-                  <option value="0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7">GHST</option>
-                  <!-- Add more predefined tokens here if needed -->
-                  <option value="custom">Add Your Own Token</option>
-                </select>
-              </div>
-              <div class="form-group" id="custom-erc20-address-group-deposit" style="display: none;">
-                <label for="custom-erc20-address-deposit">Custom ERC20 Contract Address:</label>
-                <input type="text" id="custom-erc20-address-deposit" name="custom-erc20-address-deposit" class="input" placeholder="0x...">
-              </div>
-              <div class="form-group">
-                <label for="_value">_value (uint256):</label>
-                <input type="text" id="_value" name="_value" class="input" placeholder="e.g., 100">
-              </div>
-              <button type="submit" class="button">Submit</button>
-            </form>
-          </div>
-        </div>
-      </div>
+      <!-- Only TransferEscrow (Withdraw) Form will be dynamically inserted here -->
     </div>
   </div>
 </main>
