@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* CSS Variables for Colors */
+/* CSS Variables for Colors and Styling */
 :root {
   /* Color Palette */
   --color-dark-purple: #1C0124;
@@ -15,14 +15,20 @@
   --color-vibrant-blue: #0000FF;
   
   /* Additional Styling */
-  --font-family: 'Arial', sans-serif;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-size-base: 16px;
   --font-size-large: 1.5rem;
-  --border-radius: 0.25rem;
+  --border-radius: 0.5rem;
   --transition-speed: 0.3s;
+  --max-form-width: 600px;
+  --input-height: 3rem;
 }
 
 /* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family);
@@ -41,6 +47,7 @@ header {
   align-items: flex-start;
   background-color: var(--color-soft-purple);
   border-bottom: 2px solid var(--color-vivid-purple);
+  flex-wrap: wrap;
 }
 
 .header-left {
@@ -81,7 +88,7 @@ header p {
 
 .aavegotchi-table th,
 .aavegotchi-table td {
-  padding: 0.5rem;
+  padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid #4a5568;
 }
@@ -99,6 +106,8 @@ header p {
 nav {
   background-color: var(--color-dark-purple);
   border-bottom: 1px solid var(--color-vivid-purple);
+  margin-top: 1rem;
+  border-radius: 0.5rem;
 }
 
 nav a {
@@ -115,46 +124,67 @@ nav a:hover {
 
 /* Button Styles */
 .button {
-  background-color: var(--color-bright-pink);
+  background: linear-gradient(135deg, var(--color-bright-pink), var(--color-vivid-purple));
   color: var(--color-white);
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color var(--transition-speed), transform var(--transition-speed);
+  transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover {
-  background-color: var(--color-vivid-purple);
+  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink));
   transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Wrapper */
+.form-wrapper {
+  max-width: var(--max-form-width);
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 /* Form Styles */
 .select, .input, .textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   margin-top: 0.5rem;
-  margin-bottom: 1rem;
-  background-color: var(--color-soft-purple);
+  margin-bottom: 1.5rem;
+  background-color: var(--color-dark-purple);
   color: var(--color-white);
   border: 1px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
-  box-sizing: border-box;
   font-size: 1rem;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.select:hover, .input:hover, .textarea:hover {
+  border-color: var(--color-bright-blue);
 }
 
 .select:focus, .input:focus, .textarea:focus {
   outline: none;
   border-color: var(--color-bright-blue);
-  box-shadow: 0 0 5px var(--color-bright-blue);
+  box-shadow: 0 0 10px rgba(75, 215, 255, 0.5);
 }
 
 .form-group label {
-  font-weight: bold;
+  font-weight: 600;
   color: var(--color-light-pink);
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
+/* Form Container */
 .form-container {
   background-color: var(--color-soft-purple);
   padding: 1.5rem;
@@ -171,6 +201,7 @@ nav a:hover {
   margin-bottom: 1rem;
 }
 
+/* Alert Styles */
 .alert {
   padding: 1rem;
   margin-bottom: 1.5rem;
@@ -194,6 +225,7 @@ nav a:hover {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  padding: 0.5rem 0;
 }
 
 .form-header h3 {
@@ -206,7 +238,11 @@ nav a:hover {
 }
 
 .toggle-icon.collapsed {
-  transform: rotate(-90deg);
+  transform: rotate(0deg);
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
 }
 
 .collapsible-content {
@@ -224,22 +260,51 @@ nav a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Table Styles */
+.aavegotchi-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.aavegotchi-table th,
+.aavegotchi-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #4a5568;
+}
+
+.aavegotchi-table th {
+  background-color: #434c5e;
+  color: #ffcc00;
+}
+
+.aavegotchi-table tr:hover {
+  background-color: #4a5568;
+}
+
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   header, nav, main {
     padding: 1rem;
   }
   
+  .header-left {
+    max-width: 100%;
+  }
+  
   nav a {
     margin-right: 1rem;
+    font-size: 0.9rem;
   }
   
   .button {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
   
-  .form-container {
-    padding: 1rem;
+  .form-wrapper {
+    padding: 0.5rem;
   }
 
   .aavegotchi-info {
@@ -248,6 +313,23 @@ nav a:hover {
 
   .aavegotchi-table th,
   .aavegotchi-table td {
-    padding: 0.4rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  header, nav, main {
+    padding: 0.5rem;
+  }
+
+  .button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  nav a {
+    display: block;
+    margin-bottom: 0.5rem;
   }
 }
