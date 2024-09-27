@@ -22,11 +22,6 @@
   --transition-speed: 0.3s;
   --max-form-width: 600px;
   --input-height: 3rem;
-  
-  /* Specific Colors for Consistency */
-  --color-secondary-dark: #2d3748;    /* Updated from original */
-  --color-secondary-medium: #434c5e;  /* Updated from original */
-  --color-accent-yellow: #ffcc00;     /* Updated from original */
 }
 
 /* Global Styles */
@@ -74,15 +69,15 @@ header p {
 .aavegotchi-info {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: var(--color-secondary-dark);
-  border: 1px solid var(--color-secondary-medium);
-  border-radius: var(--border-radius);
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 0.5rem;
   color: #edf2f7;
 }
 
 .aavegotchi-info h2 {
   margin-top: 0;
-  color: var(--color-accent-yellow);
+  color: #ffcc00;
 }
 
 .aavegotchi-table {
@@ -93,18 +88,18 @@ header p {
 
 .aavegotchi-table th,
 .aavegotchi-table td {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   text-align: left;
-  border-bottom: 1px solid var(--color-secondary-medium);
+  border-bottom: 1px solid #4a5568;
 }
 
 .aavegotchi-table th {
-  background-color: var(--color-secondary-medium);
-  color: var(--color-accent-yellow);
+  background-color: #434c5e;
+  color: #ffcc00;
 }
 
 .aavegotchi-table tr:hover {
-  background-color: var(--color-secondary-dark);
+  background-color: #4a5568;
 }
 
 /* Navigation Styles */
@@ -112,7 +107,7 @@ nav {
   background-color: var(--color-dark-purple);
   border-bottom: 1px solid var(--color-vivid-purple);
   margin-top: 1rem;
-  border-radius: var(--border-radius);
+  border-radius: 0.5rem;
 }
 
 nav a {
@@ -276,16 +271,16 @@ nav a:hover {
 .aavegotchi-table td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--color-secondary-medium);
+  border-bottom: 1px solid #4a5568;
 }
 
 .aavegotchi-table th {
-  background-color: var(--color-secondary-medium);
-  color: var(--color-accent-yellow);
+  background-color: #434c5e;
+  color: #ffcc00;
 }
 
 .aavegotchi-table tr:hover {
-  background-color: var(--color-secondary-dark);
+  background-color: #4a5568;
 }
 
 /* Responsive Design */
@@ -338,79 +333,7 @@ nav a:hover {
     margin-bottom: 0.5rem;
   }
 }
-
 /* Additional Styles for Add Your Own Token */
 #custom-erc20-address {
   display: none; /* Hidden by default */
-  width: 100%;
-  padding: 0.75rem 1rem;
-  margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
-  background-color: var(--color-dark-purple);
-  color: var(--color-white);
-  border: 1px solid var(--color-vivid-purple);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-}
-
-#custom-erc20-address:hover {
-  border-color: var(--color-bright-blue);
-}
-
-#custom-erc20-address:focus {
-  outline: none;
-  border-color: var(--color-bright-blue);
-  box-shadow: 0 0 10px rgba(75, 215, 255, 0.5);
-}
-
-/* Extra Tools Dropdown Styles */
-.extra-tools-container {
-  background-color: var(--color-soft-purple);
-  padding: 1.5rem;
-  border: 2px solid var(--color-vivid-purple);
-  border-radius: var(--border-radius);
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all var(--transition-speed);
-}
-
-.extra-tools-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  padding: 0.5rem 0;
-}
-
-.extra-tools-header h3 {
-  margin: 0;
-  color: var(--color-light-pink);
-}
-
-.extra-tools-toggle-icon {
-  transition: transform var(--transition-speed);
-}
-
-.extra-tools-toggle-icon.collapsed {
-  transform: rotate(0deg);
-}
-
-.extra-tools-toggle-icon.expanded {
-  transform: rotate(180deg);
-}
-
-.extra-tools-collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--transition-speed) ease-out;
-}
-
-.extra-tools-collapsible-content.expanded {
-  max-height: 1000px; /* Arbitrary high value to allow full expansion */
-  transition: max-height var(--transition-speed) ease-in;
-}
-
-.extra-tools-header:hover {
-  background-color: rgba(255, 255, 255, 0.1);
 }

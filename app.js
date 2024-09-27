@@ -83,7 +83,7 @@ const combinedABI = [
       "inputs": [
         { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
         { "internalType": "address", "name": "_erc20Contract", "type": "address" },
-        { "internalType": "address", "name": "_recipient", "type": "address" }, // Added _recipient
+        { "internalType": "address", "name": "_recipient", "type": "address" },
         { "internalType": "uint256", "name": "_transferAmount", "type": "uint256" }
       ],
       "name": "transferEscrow",
@@ -152,13 +152,17 @@ let userAddress; // To store the connected wallet address
 const connectWalletButton = document.getElementById('connect-wallet');
 const walletInfo = document.getElementById('wallet-info');
 const networkNameDisplay = document.getElementById('network-name');
-const facetSelect = document.getElementById('facet-select'); // We'll repurpose this for "Extra Tools"
+const facetSelect = document.getElementById('facet-select');
 const methodFormsContainer = document.getElementById('method-forms');
 const contractAddressDisplay = document.getElementById('contract-address');
 const aavegotchiInfoContainer = document.getElementById('aavegotchi-info'); // New Element
 
 // Event Listeners
 connectWalletButton.addEventListener('click', connectWallet);
+facetSelect.addEventListener('change', (e) => {
+  selectedFacet = e.target.value;
+  generateMethodForms();
+});
 
 // Function to Connect Wallet
 async function connectWallet() {
@@ -245,151 +249,170 @@ function generateMethodForms() {
     return;
   }
 
-  // Always generate TransferEscrow (Withdraw) form
-  generateTransferEscrowForm();
+  const selectedFacet = facetSelect.value;
+  const facetMethods = getFacetMethods(selectedFacet);
 
-  // Generate Extra Tools Dropdown
-  generateExtraToolsDropdown();
-}
-
-// Function to Generate TransferEscrow (Withdraw) Form
-function generateTransferEscrowForm() {
-  const methodName = 'transferEscrow';
-  const method = getFacetMethods('EscrowFacet')[methodName];
-
-  if (!method) {
-    console.error(`Method ${methodName} not found in EscrowFacet.`);
+  if (!facetMethods) {
+    methodFormsContainer.innerHTML = '<p>No methods found for the selected facet.</p>';
     return;
   }
 
-  const formContainer = document.createElement('div');
-  formContainer.className = 'form-container';
+  // Iterate over each method and create a collapsible form
+  for (const methodName in facetMethods) {
+    const method = facetMethods[methodName];
+    const formContainer = document.createElement('div');
+    formContainer.className = 'form-container';
 
-  // Create the header (no need to toggle since it's always expanded)
-  const formHeader = document.createElement('div');
-  formHeader.className = 'form-header';
+    // Create the header that will be clickable
+    const formHeader = document.createElement('div');
+    formHeader.className = 'form-header';
 
-  const formTitle = document.createElement('h3');
-  formTitle.innerText = 'TransferEscrow (Withdraw)';
+    const formTitle = document.createElement('h3');
 
-  formHeader.appendChild(formTitle);
-  formContainer.appendChild(formHeader);
-
-  // Create the content div (always expanded)
-  const contentDiv = document.createElement('div');
-  contentDiv.className = 'collapsible-content expanded';
-
-  const form = document.createElement('form');
-  form.setAttribute('data-method', methodName);
-  form.addEventListener('submit', handleFormSubmit);
-
-  method.inputs.forEach(input => {
-    // Skip '_recipient' and '_tokenId' fields as _tokenId is hardcoded
-    if (input.name === '_recipient' || input.name === '_tokenId') {
-      return;
+    // Update form title based on method
+    if (methodName === 'transferEscrow') {
+      formTitle.innerText = 'TransferEscrow (Withdraw)';
+    } else {
+      formTitle.innerText = methodName;
     }
 
-    const formGroup = document.createElement('div');
-    formGroup.className = 'form-group';
+    // Create the toggle icon (you can use a simple triangle or a plus/minus sign)
+    const toggleIcon = document.createElement('span');
+    toggleIcon.className = 'toggle-icon collapsed';
+    toggleIcon.innerHTML = '&#9660;'; // Downward triangle
 
-    const label = document.createElement('label');
-    label.setAttribute('for', input.name);
+    formHeader.appendChild(formTitle);
+    formHeader.appendChild(toggleIcon);
+    formContainer.appendChild(formHeader);
 
-    // Update labels based on requirements
-    if (input.name === '_erc20Contract') {
-      label.innerText = 'ERC20 Contract Address:';
-    } else if (input.name === '_transferAmount') {
-      label.innerText = 'Withdraw Amount:';
-    } else {
-      label.innerText = `${input.name} (${input.type}):`;
-    }
+    // Create the collapsible content div
+    const collapsibleContent = document.createElement('div');
+    collapsibleContent.className = 'collapsible-content';
 
-    formGroup.appendChild(label);
+    const form = document.createElement('form');
+    form.setAttribute('data-method', methodName);
+    form.addEventListener('submit', handleFormSubmit);
 
-    let inputElement;
-    if (input.name === '_erc20Contract') {
-      // Create a dropdown for ERC20 Contract Address
-      inputElement = document.createElement('select');
-      inputElement.className = 'select';
-      inputElement.id = input.name;
-      inputElement.name = input.name;
-
-      // Add predefined tokens
-      predefinedTokens.forEach(token => {
-        const option = document.createElement('option');
-        option.value = token.address;
-        option.innerText = token.name;
-        inputElement.appendChild(option);
-      });
-
-      // Add "Add Your Own Token" option
-      const customOption = document.createElement('option');
-      customOption.value = 'custom';
-      customOption.innerText = 'Add Your Own Token';
-      inputElement.appendChild(customOption);
-
-      formGroup.appendChild(inputElement);
-
-      // Create a hidden input for custom ERC20 address
-      const customInput = document.createElement('input');
-      customInput.type = 'text';
-      customInput.className = 'input';
-      customInput.id = 'custom-erc20-address';
-      customInput.name = 'custom-erc20-address';
-      customInput.placeholder = '0x...';
-      customInput.style.display = 'none'; // Hidden by default
-      formGroup.appendChild(customInput);
-
-      // Event listener to show/hide custom ERC20 address input
-      inputElement.addEventListener('change', (e) => {
-        if (e.target.value === 'custom') {
-          customInput.style.display = 'block';
-        } else {
-          customInput.style.display = 'none';
-        }
-      });
-    } else {
-      if (input.type.endsWith('[]')) {
-        inputElement = document.createElement('textarea');
-        inputElement.className = 'textarea';
-        inputElement.placeholder = 'Enter comma-separated values';
-      } else {
-        inputElement = document.createElement('input');
-        inputElement.type = 'text';
-        inputElement.className = 'input';
-        if (input.type.startsWith('address')) {
-          inputElement.placeholder = '0x...';
-        }
+    method.inputs.forEach(input => {
+      // Skip '_recipient' field for 'transferEscrow' method
+      if (methodName === 'transferEscrow' && input.name === '_recipient') {
+        return;
       }
 
-      inputElement.id = input.name;
-      inputElement.name = input.name;
-      formGroup.appendChild(inputElement);
-    }
+      const formGroup = document.createElement('div');
+      formGroup.className = 'form-group';
 
-    form.appendChild(formGroup);
-  });
+      const label = document.createElement('label');
+      label.setAttribute('for', input.name);
 
-  const submitButton = document.createElement('button');
-  submitButton.type = 'submit';
-  submitButton.className = 'button';
-  submitButton.innerText = 'Submit';
-  form.appendChild(submitButton);
+      // Update labels based on requirements
+      if (methodName === 'transferEscrow') {
+        if (input.name === '_erc20Contract') {
+          label.innerText = 'ERC20 Contract Address:';
+        } else if (input.name === '_transferAmount') {
+          label.innerText = 'Transfer Amount:';
+        } else {
+          label.innerText = `${input.name} (${input.type}):`;
+        }
+      } else {
+        label.innerText = `${input.name} (${input.type}):`;
+      }
 
-  contentDiv.appendChild(form);
-  formContainer.appendChild(contentDiv);
-  methodFormsContainer.appendChild(formContainer);
+      formGroup.appendChild(label);
+
+      let inputElement;
+      if (methodName === 'transferEscrow' && input.name === '_erc20Contract') {
+        // Create a dropdown for ERC20 Contract Address
+        inputElement = document.createElement('select');
+        inputElement.className = 'select';
+        inputElement.id = input.name;
+        inputElement.name = input.name;
+
+        // Add predefined tokens
+        predefinedTokens.forEach(token => {
+          const option = document.createElement('option');
+          option.value = token.address;
+          option.innerText = token.name;
+          inputElement.appendChild(option);
+        });
+
+        // Add "Add Your Own Token" option
+        const customOption = document.createElement('option');
+        customOption.value = 'custom';
+        customOption.innerText = 'Add Your Own Token';
+        inputElement.appendChild(customOption);
+
+        formGroup.appendChild(inputElement);
+
+        // Create a hidden input for custom ERC20 address
+        const customInput = document.createElement('input');
+        customInput.type = 'text';
+        customInput.className = 'input';
+        customInput.id = 'custom-erc20-address';
+        customInput.name = 'custom-erc20-address';
+        customInput.placeholder = '0x...';
+        formGroup.appendChild(customInput);
+
+        // Event listener to show/hide custom ERC20 address input
+        inputElement.addEventListener('change', (e) => {
+          if (e.target.value === 'custom') {
+            customInput.style.display = 'block';
+          } else {
+            customInput.style.display = 'none';
+          }
+        });
+      } else {
+        if (input.type.endsWith('[]')) {
+          inputElement = document.createElement('textarea');
+          inputElement.className = 'textarea';
+          inputElement.placeholder = 'Enter comma-separated values';
+        } else {
+          inputElement = document.createElement('input');
+          inputElement.type = 'text';
+          inputElement.className = 'input';
+          if (input.type.startsWith('address')) {
+            inputElement.placeholder = '0x...';
+          }
+        }
+
+        inputElement.id = input.name;
+        inputElement.name = input.name;
+        formGroup.appendChild(inputElement);
+      }
+
+      form.appendChild(formGroup);
+    });
+
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.className = 'button';
+    submitButton.innerText = 'Submit';
+    form.appendChild(submitButton);
+
+    collapsibleContent.appendChild(form);
+    formContainer.appendChild(collapsibleContent);
+    methodFormsContainer.appendChild(formContainer);
+
+    // Initially collapse the form
+    toggleCollapse(collapsibleContent, toggleIcon, false);
+
+    // Add click event listener to the header to toggle collapse
+    formHeader.addEventListener('click', () => {
+      const isExpanded = collapsibleContent.classList.contains('expanded');
+      toggleCollapse(collapsibleContent, toggleIcon, !isExpanded);
+    });
+  }
 }
 
 // Function to Get Methods for a Facet
 function getFacetMethods(facet) {
   const facets = {
     'EscrowFacet': {
-      'transferEscrow': { // Corrected inputs with _recipient
+      'transferEscrow': { // Modified inputs
         inputs: [
           { name: '_tokenId', type: 'uint256' },
           { name: '_erc20Contract', type: 'address' },
-          { name: '_recipient', type: 'address' }, // Added back _recipient
+          // Removed '_recipient'
           { name: '_transferAmount', type: 'uint256' }
         ]
       },
@@ -470,21 +493,9 @@ async function handleFormSubmit(event) {
   event.preventDefault();
   const form = event.target;
   const methodName = form.getAttribute('data-method');
-  let method;
-  
-  // Determine which facet the method belongs to
-  if (methodName === 'transferEscrow' || methodName === 'batchTransferEscrow' || methodName === 'batchDepositERC20' || methodName === 'batchDepositGHST' || methodName === 'depositERC20') {
-    method = getFacetMethods('EscrowFacet')[methodName];
-  } else if (methodName === 'allAavegotchisOfOwner') {
-    method = getFacetMethods('AavegotchiFacet')[methodName];
-  }
-  // Add more conditions if there are more facets
-
-  if (!method) {
-    alert(`Method ${methodName} not found.`);
-    return;
-  }
-
+  const selectedFacet = facetSelect.value;
+  const facetMethods = getFacetMethods(selectedFacet);
+  const method = facetMethods[methodName];
   const formData = new FormData(form);
 
   // Prepare arguments
@@ -492,10 +503,10 @@ async function handleFormSubmit(event) {
   try {
     for (const input of method.inputs) {
       let value = formData.get(input.name)?.trim() || '';
-
+      
       // Check if the input is _transferAmount or _values (for batchTransferEscrow and batchDepositERC20)
       const isAmountField = ['_transferAmount', '_transferAmounts', '_value', '_values'].includes(input.name);
-
+      
       if (input.type.endsWith('[]')) {
         // Split by commas and trim whitespace
         value = value.split(',').map(item => item.trim()).filter(item => item !== '');
@@ -540,12 +551,7 @@ async function handleFormSubmit(event) {
             if (!/^\d+$/.test(value)) {
               throw new Error(`Invalid number for ${input.name}`);
             }
-            // Handle hardcoded _tokenId for transferEscrow
-            if (methodName === 'transferEscrow' && input.name === '_tokenId') {
-              value = ethers.BigNumber.from('15615');
-            } else {
-              value = ethers.BigNumber.from(value);
-            }
+            value = ethers.BigNumber.from(value);
           } else if (input.type.startsWith('address')) {
             if (!ethers.utils.isAddress(value)) {
               throw new Error(`Invalid address for ${input.name}: ${value}`);
@@ -556,29 +562,19 @@ async function handleFormSubmit(event) {
       args.push(value);
     }
 
-    // Special handling for transferEscrow
+    // If method is 'transferEscrow', insert the connected wallet address as '_recipient'
     if (methodName === 'transferEscrow') {
       // The original 'transferEscrow' expects: _tokenId, _erc20Contract, _recipient, _transferAmount
-      // Since _tokenId is hardcoded to 15615, we ensure it's the first argument
-      if (args.length !== 3) { // _erc20Contract and _transferAmount
-        throw new Error('Unexpected number of arguments for transferEscrow.');
+      // Currently, args = [_tokenId, _erc20Contract, _transferAmount]
+      // We need to insert 'userAddress' between _erc20Contract and _transferAmount
+      if (!userAddress) {
+        throw new Error('User address not found. Please reconnect your wallet.');
       }
-      const hardcodedTokenId = ethers.BigNumber.from('15615');
-      args.unshift(hardcodedTokenId); // Insert at the beginning
-      args.splice(3, 0, userAddress); // Insert userAddress as _recipient
+      args.splice(2, 0, userAddress); // Insert at index 2
     }
 
     // Call the contract method
-    let tx;
-    if (methodName === 'allAavegotchisOfOwner') {
-      // This is a view function, handle differently
-      const aavegotchis = await contract[methodName](...args);
-      displayAavegotchis(aavegotchis);
-      return;
-    } else {
-      tx = await contract[methodName](...args);
-    }
-
+    const tx = await contract[methodName](...args);
     alert(`Transaction submitted. Hash: ${tx.hash}`);
     await tx.wait();
     alert('Transaction confirmed!');
@@ -686,87 +682,9 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
   }
 }
 
-// Function to Display Aavegotchis (Used for non-transactional methods)
-function displayAavegotchis(aavegotchis) {
-  if (aavegotchis.length === 0) {
-    aavegotchiInfoContainer.innerHTML = '<p>No Aavegotchis found for this wallet.</p>';
-    return;
+// Initial call to generate method forms if the wallet is already connected
+window.onload = async () => {
+  if (window.ethereum && window.ethereum.selectedAddress) {
+    await connectWallet();
   }
-
-  // Fetch GHST decimals and symbol
-  ghstContract.decimals().then(ghstDecimals => {
-    ghstContract.symbol().then(ghstSymbol => {
-      // Create a table to display Aavegotchi details
-      const table = document.createElement('table');
-      table.className = 'aavegotchi-table';
-
-      // Create table header
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-
-      const headers = ['Token ID', 'Name', 'Escrow Wallet', `GHST Balance (${ghstSymbol})`];
-      headers.forEach(headerText => {
-        const th = document.createElement('th');
-        th.innerText = headerText;
-        headerRow.appendChild(th);
-      });
-
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      // Create table body
-      const tbody = document.createElement('tbody');
-
-      // Prepare an array of promises to fetch GHST balances
-      const balancePromises = aavegotchis.map(aavegotchi => {
-        return ghstContract.balanceOf(aavegotchi.escrow);
-      });
-
-      // Fetch all balances in parallel
-      Promise.all(balancePromises).then(balances => {
-        aavegotchis.forEach((aavegotchi, index) => {
-          const row = document.createElement('tr');
-
-          const tokenId = aavegotchi.tokenId.toString();
-          const name = aavegotchi.name;
-          const escrowWallet = aavegotchi.escrow;
-
-          const tokenIdCell = document.createElement('td');
-          tokenIdCell.innerText = tokenId;
-          row.appendChild(tokenIdCell);
-
-          const nameCell = document.createElement('td');
-          nameCell.innerText = name;
-          row.appendChild(nameCell);
-
-          const escrowCell = document.createElement('td');
-          escrowCell.innerText = escrowWallet;
-          row.appendChild(escrowCell);
-
-          const ghstBalanceRaw = balances[index];
-          const ghstBalance = ethers.utils.formatUnits(ghstBalanceRaw, ghstDecimals);
-          const ghstBalanceCell = document.createElement('td');
-          ghstBalanceCell.innerText = ghstBalance;
-          row.appendChild(ghstBalanceCell);
-
-          tbody.appendChild(row);
-        });
-
-        table.appendChild(tbody);
-
-        // Populate the Aavegotchi Info Container
-        aavegotchiInfoContainer.innerHTML = '<h2>Your Aavegotchis:</h2>';
-        aavegotchiInfoContainer.appendChild(table);
-      }).catch(error => {
-        console.error("Error fetching GHST balances:", error);
-        aavegotchiInfoContainer.innerHTML = '<p>Error fetching GHST balances. See console for details.</p>';
-      });
-    }).catch(error => {
-      console.error("Error fetching GHST symbol:", error);
-      aavegotchiInfoContainer.innerHTML = '<p>Error fetching GHST symbol. See console for details.</p>';
-    });
-  }).catch(error => {
-    console.error("Error fetching GHST decimals:", error);
-    aavegotchiInfoContainer.innerHTML = '<p>Error fetching GHST decimals. See console for details.</p>';
-  });
-}
+};
