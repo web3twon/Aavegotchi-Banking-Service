@@ -152,17 +152,14 @@ let userAddress; // To store the connected wallet address
 const connectWalletButton = document.getElementById('connect-wallet');
 const walletInfo = document.getElementById('wallet-info');
 const networkNameDisplay = document.getElementById('network-name');
-const facetSelect = document.getElementById('facet-select');
+// Removed facetSelect
 const methodFormsContainer = document.getElementById('method-forms');
 const contractAddressDisplay = document.getElementById('contract-address');
 const aavegotchiInfoContainer = document.getElementById('aavegotchi-info'); // New Element
 
 // Event Listeners
 connectWalletButton.addEventListener('click', connectWallet);
-facetSelect.addEventListener('change', (e) => {
-  selectedFacet = e.target.value;
-  generateMethodForms();
-});
+// Removed facetSelect event listener
 
 // Function to Connect Wallet
 async function connectWallet() {
@@ -249,7 +246,7 @@ function generateMethodForms() {
     return;
   }
 
-  const selectedFacet = facetSelect.value;
+  const selectedFacet = 'EscrowFacet'; // Hardcoded facet
   const facetMethods = getFacetMethods(selectedFacet);
 
   if (!facetMethods) {
@@ -294,7 +291,12 @@ function generateMethodForms() {
     form.addEventListener('submit', handleFormSubmit);
 
     method.inputs.forEach(input => {
-      // Skip '_recipient' field for 'transferEscrow' method
+      // Skip '_tokenId' field as it's hardcoded
+      if (input.name === '_tokenId') {
+        return;
+      }
+
+      // Skip '_recipient' field for 'transferEscrow' method (handled automatically)
       if (methodName === 'transferEscrow' && input.name === '_recipient') {
         return;
       }
@@ -410,7 +412,7 @@ function getFacetMethods(facet) {
     'EscrowFacet': {
       'transferEscrow': { // Modified inputs
         inputs: [
-          { name: '_tokenId', type: 'uint256' },
+          // Removed '_tokenId' as it's hardcoded
           { name: '_erc20Contract', type: 'address' },
           // Removed '_recipient'
           { name: '_transferAmount', type: 'uint256' }
@@ -418,7 +420,7 @@ function getFacetMethods(facet) {
       },
       'batchTransferEscrow': {
         inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
+          // Removed '_tokenIds' as it's hardcoded
           { name: '_erc20Contracts', type: 'address[]' },
           { name: '_recipients', type: 'address[]' },
           { name: '_transferAmounts', type: 'uint256[]' }
@@ -426,63 +428,27 @@ function getFacetMethods(facet) {
       },
       'batchDepositERC20': {
         inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
+          // Removed '_tokenIds' as it's hardcoded
           { name: '_erc20Contracts', type: 'address[]' },
           { name: '_values', type: 'uint256[]' }
         ]
       },
       'batchDepositGHST': {
         inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
+          // Removed '_tokenIds' as it's hardcoded
           { name: '_values', type: 'uint256[]' }
         ]
       },
       'depositERC20': {
         inputs: [
-          { name: '_tokenId', type: 'uint256' },
+          // Removed '_tokenId' as it's hardcoded
           { name: '_erc20Contract', type: 'address' },
           { name: '_value', type: 'uint256' }
         ]
       }
     },
-    'AavegotchiFacet': {
-      'allAavegotchisOfOwner': {
-        inputs: [
-          { name: '_owner', type: 'address' }
-        ],
-        outputs: [
-          {
-            components: [
-              { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-              { "internalType": "string", "name": "name", "type": "string" },
-              { "internalType": "address", "name": "owner", "type": "address" },
-              { "internalType": "uint256", "name": "randomNumber", "type": "uint256" },
-              { "internalType": "uint256", "name": "status", "type": "uint256" },
-              { "internalType": "int16[6]", "name": "numericTraits", "type": "int16[6]" },
-              { "internalType": "int16[6]", "name": "modifiedNumericTraits", "type": "int16[6]" },
-              { "internalType": "uint16[16]", "name": "equippedWearables", "type": "uint16[16]" },
-              { "internalType": "address", "name": "collateral", "type": "address" },
-              { "internalType": "address", "name": "escrow", "type": "address" },
-              { "internalType": "uint256", "name": "stakedAmount", "type": "uint256" },
-              { "internalType": "uint256", "name": "minimumStake", "type": "uint256" },
-              { "internalType": "uint256", "name": "kinship", "type": "uint256" },
-              { "internalType": "uint256", "name": "lastInteracted", "type": "uint256" },
-              { "internalType": "uint256", "name": "experience", "type": "uint256" },
-              { "internalType": "uint256", "name": "toNextLevel", "type": "uint256" },
-              { "internalType": "uint256", "name": "usedSkillPoints", "type": "uint256" },
-              { "internalType": "uint256", "name": "level", "type": "uint256" },
-              { "internalType": "uint256", "name": "hauntId", "type": "uint256" },
-              { "internalType": "uint256", "name": "baseRarityScore", "type": "uint256" },
-              { "internalType": "uint256", "name": "modifiedRarityScore", "type": "uint256" }
-            ],
-            "internalType": "struct AavegotchiInfo[]",
-            "name": "aavegotchis",
-            "type": "tuple[]"
-          }
-        ]
-      }
-    }
-    // Add more facets if needed
+    // Removed 'AavegotchiFacet' as it's not part of the EscrowFacet
+    // If needed, you can keep it or remove based on your requirements
   };
 
   return facets[facet];
@@ -493,7 +459,7 @@ async function handleFormSubmit(event) {
   event.preventDefault();
   const form = event.target;
   const methodName = form.getAttribute('data-method');
-  const selectedFacet = facetSelect.value;
+  const selectedFacet = 'EscrowFacet'; // Hardcoded facet
   const facetMethods = getFacetMethods(selectedFacet);
   const method = facetMethods[methodName];
   const formData = new FormData(form);
@@ -501,6 +467,17 @@ async function handleFormSubmit(event) {
   // Prepare arguments
   const args = [];
   try {
+    // Hardcoded _tokenId
+    const _tokenId = ethers.BigNumber.from('15615');
+    // Depending on the method, _tokenId may not be needed
+    // If the method expects _tokenId, include it
+
+    // Determine if the method requires _tokenId
+    const methodsRequiringTokenId = ['transferEscrow', 'depositERC20'];
+    if (methodsRequiringTokenId.includes(methodName)) {
+      args.push(_tokenId);
+    }
+
     for (const input of method.inputs) {
       let value = formData.get(input.name)?.trim() || '';
       
@@ -570,7 +547,8 @@ async function handleFormSubmit(event) {
       if (!userAddress) {
         throw new Error('User address not found. Please reconnect your wallet.');
       }
-      args.splice(2, 0, userAddress); // Insert at index 2
+      // Insert at index 2
+      args.splice(2, 0, userAddress);
     }
 
     // Call the contract method
