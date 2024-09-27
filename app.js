@@ -3,6 +3,35 @@
 // Contract Information
 const contractAddress = '0x86935F11C86623deC8a25696E1C19a8659CbF95d'; // Ensure this is correct
 
+// GHST Token Information
+const ghstContractAddress = '0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7';
+const ghstABI = [
+  // balanceOf
+  {
+    "constant": true,
+    "inputs": [{ "name": "account", "type": "address" }],
+    "name": "balanceOf",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "type": "function"
+  },
+  // decimals
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{ "name": "", "type": "uint8" }],
+    "type": "function"
+  },
+  // Optional: symbol
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{ "name": "", "type": "string" }],
+    "type": "function"
+  }
+];
+
 // Combined ABI: EscrowFacet + AavegotchiFacet
 const combinedABI = [
     // EscrowFacet Functions
@@ -107,6 +136,7 @@ const combinedABI = [
 let provider;
 let signer;
 let contract;
+let ghstContract;
 
 // DOM Elements
 const connectWalletButton = document.getElementById('connect-wallet');
@@ -147,8 +177,9 @@ async function connectWallet() {
     const network = await provider.getNetwork();
     networkNameDisplay.innerText = `${capitalizeFirstLetter(network.name)} (${network.chainId})`;
 
-    // Initialize contract
+    // Initialize contracts
     contract = new ethers.Contract(contractAddress, combinedABI, signer);
+    ghstContract = new ethers.Contract(ghstContractAddress, ghstABI, provider);
 
     // Update button text
     connectWalletButton.innerText = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -178,6 +209,7 @@ function handleAccountsChanged(accounts) {
     networkNameDisplay.innerText = 'Not Connected';
     connectWalletButton.innerText = 'Connect Wallet';
     contract = null;
+    ghstContract = null;
     methodFormsContainer.innerHTML = '';
     aavegotchiInfoContainer.innerHTML = ''; // Clear Aavegotchi Info
   } else {
@@ -461,6 +493,10 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       return;
     }
 
+    // Fetch GHST decimals
+    const ghstDecimals = await ghstContract.decimals();
+    const ghstSymbol = await ghstContract.symbol();
+
     // Create a table to display Aavegotchi details
     const table = document.createElement('table');
     table.className = 'aavegotchi-table';
@@ -469,7 +505,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
 
-    const headers = ['Token ID', 'Name', 'Escrow Wallet'];
+    const headers = ['Token ID', 'Name', 'Escrow Wallet', `GHST Balance (${ghstSymbol})`];
     headers.forEach(headerText => {
       const th = document.createElement('th');
       th.innerText = headerText;
@@ -482,7 +518,15 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
     // Create table body
     const tbody = document.createElement('tbody');
 
-    aavegotchis.forEach(aavegotchi => {
+    // Prepare an array of promises to fetch GHST balances
+    const balancePromises = aavegotchis.map(aavegotchi => {
+      return ghstContract.balanceOf(aavegotchi.escrow);
+    });
+
+    // Fetch all balances in parallel
+    const balances = await Promise.all(balancePromises);
+
+    aavegotchis.forEach((aavegotchi, index) => {
       const row = document.createElement('tr');
 
       const tokenId = aavegotchi.tokenId.toString();
@@ -500,6 +544,12 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       const escrowCell = document.createElement('td');
       escrowCell.innerText = escrowWallet;
       row.appendChild(escrowCell);
+
+      const ghstBalanceRaw = balances[index];
+      const ghstBalance = ethers.utils.formatUnits(ghstBalanceRaw, ghstDecimals);
+      const ghstBalanceCell = document.createElement('td');
+      ghstBalanceCell.innerText = ghstBalance;
+      row.appendChild(ghstBalanceCell);
 
       tbody.appendChild(row);
     });
