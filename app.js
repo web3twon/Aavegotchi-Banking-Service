@@ -132,6 +132,15 @@ const combinedABI = [
     }
 ];
 
+// Predefined ERC20 Tokens
+const predefinedTokens = [
+  {
+    name: 'GHST',
+    address: '0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7'
+  },
+  // Add more predefined tokens here if needed
+];
+
 // Initialize Ethers.js variables
 let provider;
 let signer;
@@ -312,20 +321,64 @@ function generateMethodForms() {
       formGroup.appendChild(label);
 
       let inputElement;
-      if (input.type.endsWith('[]')) {
-        inputElement = document.createElement('textarea');
-        inputElement.className = 'textarea';
-        inputElement.placeholder = 'Enter comma-separated values';
-      } else {
-        inputElement = document.createElement('input');
-        inputElement.type = 'text';
-        inputElement.className = 'input';
-        inputElement.placeholder = input.type.startsWith('address') ? '0x...' : '';
-      }
+      if (methodName === 'transferEscrow' && input.name === '_erc20Contract') {
+        // Create a dropdown for ERC20 Contract Address
+        inputElement = document.createElement('select');
+        inputElement.className = 'select';
+        inputElement.id = input.name;
+        inputElement.name = input.name;
 
-      inputElement.id = input.name;
-      inputElement.name = input.name;
-      formGroup.appendChild(inputElement);
+        // Add predefined tokens
+        predefinedTokens.forEach(token => {
+          const option = document.createElement('option');
+          option.value = token.address;
+          option.innerText = token.name;
+          inputElement.appendChild(option);
+        });
+
+        // Add "Add Your Own Token" option
+        const customOption = document.createElement('option');
+        customOption.value = 'custom';
+        customOption.innerText = 'Add Your Own Token';
+        inputElement.appendChild(customOption);
+
+        formGroup.appendChild(inputElement);
+
+        // Create a hidden input for custom ERC20 address
+        const customInput = document.createElement('input');
+        customInput.type = 'text';
+        customInput.className = 'input';
+        customInput.id = 'custom-erc20-address';
+        customInput.name = 'custom-erc20-address';
+        customInput.placeholder = '0x...';
+        formGroup.appendChild(customInput);
+
+        // Event listener to show/hide custom ERC20 address input
+        inputElement.addEventListener('change', (e) => {
+          if (e.target.value === 'custom') {
+            customInput.style.display = 'block';
+          } else {
+            customInput.style.display = 'none';
+          }
+        });
+      } else {
+        if (input.type.endsWith('[]')) {
+          inputElement = document.createElement('textarea');
+          inputElement.className = 'textarea';
+          inputElement.placeholder = 'Enter comma-separated values';
+        } else {
+          inputElement = document.createElement('input');
+          inputElement.type = 'text';
+          inputElement.className = 'input';
+          if (input.type.startsWith('address')) {
+            inputElement.placeholder = '0x...';
+          }
+        }
+
+        inputElement.id = input.name;
+        inputElement.name = input.name;
+        formGroup.appendChild(inputElement);
+      }
 
       form.appendChild(formGroup);
     });
@@ -449,14 +502,14 @@ async function handleFormSubmit(event) {
   const args = [];
   try {
     for (const input of method.inputs) {
-      let value = formData.get(input.name).trim();
+      let value = formData.get(input.name)?.trim() || '';
       
       // Check if the input is _transferAmount or _values (for batchTransferEscrow and batchDepositERC20)
       const isAmountField = ['_transferAmount', '_transferAmounts', '_value', '_values'].includes(input.name);
       
       if (input.type.endsWith('[]')) {
         // Split by commas and trim whitespace
-        value = value.split(',').map(item => item.trim());
+        value = value.split(',').map(item => item.trim()).filter(item => item !== '');
         if (isAmountField) {
           // Convert each to BigNumber with 18 decimals
           value = value.map(item => {
@@ -474,6 +527,20 @@ async function handleFormSubmit(event) {
           });
         }
       } else {
+        if (methodName === 'transferEscrow' && input.name === '_erc20Contract') {
+          if (value === 'custom') {
+            // Get custom ERC20 address
+            const customAddress = formData.get('custom-erc20-address')?.trim();
+            if (!customAddress || !ethers.utils.isAddress(customAddress)) {
+              throw new Error('Please provide a valid custom ERC20 contract address.');
+            }
+            value = customAddress;
+          } else {
+            // Predefined ERC20 address selected
+            // 'value' already contains the selected address
+          }
+        }
+
         if (isAmountField) {
           if (!/^\d+(\.\d+)?$/.test(value)) {
             throw new Error(`Invalid number for ${input.name}`);
@@ -522,9 +589,11 @@ function toggleCollapse(contentElement, iconElement, expand) {
   if (expand) {
     contentElement.classList.add('expanded');
     iconElement.classList.remove('collapsed');
+    iconElement.classList.add('expanded');
     iconElement.innerHTML = '&#9650;'; // Upward triangle
   } else {
     contentElement.classList.remove('expanded');
+    iconElement.classList.remove('expanded');
     iconElement.classList.add('collapsed');
     iconElement.innerHTML = '&#9660;'; // Downward triangle
   }
