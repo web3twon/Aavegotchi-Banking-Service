@@ -340,7 +340,8 @@ nav a:hover {
 }
 
 /* Additional Styles for Add Your Own Token */
-#custom-erc20-address {
+#custom-erc20-address,
+#custom-erc20-address-deposit {
   display: none; /* Hidden by default */
   width: 100%;
   padding: 0.75rem 1rem;
@@ -354,11 +355,13 @@ nav a:hover {
   transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
 
-#custom-erc20-address:hover {
+#custom-erc20-address:hover,
+#custom-erc20-address-deposit:hover {
   border-color: var(--color-bright-blue);
 }
 
-#custom-erc20-address:focus {
+#custom-erc20-address:focus,
+#custom-erc20-address-deposit:focus {
   outline: none;
   border-color: var(--color-bright-blue);
   box-shadow: 0 0 10px rgba(75, 215, 255, 0.5);
