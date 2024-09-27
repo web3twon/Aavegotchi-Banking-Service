@@ -237,7 +237,7 @@ function capitalizeFirstLetter(string) {
 
 // Function to Generate Method Forms
 function generateMethodForms() {
-  methodFormsContainer.innerHTML = ''; // Clear existing forms
+  // Removed methodFormsContainer.innerHTML = ''; to prevent clearing the forms
 
   if (!contract) {
     methodFormsContainer.innerHTML = '<p>Please connect your wallet to interact with the contract.</p>';
@@ -248,23 +248,29 @@ function generateMethodForms() {
   const transferEscrowForm = document.getElementById('transfer-escrow-form');
   if (transferEscrowForm) {
     transferEscrowForm.addEventListener('submit', handleFormSubmit);
+  } else {
+    console.warn("TransferEscrow form not found.");
   }
 
   // Extra Tools - Collapsible Section
   const extraToolsHeader = document.querySelector('.form-header');
-  if (extraToolsHeader) {
+  const extraToolsToggleIcon = extraToolsHeader ? extraToolsHeader.querySelector('.toggle-icon') : null;
+  const extraToolsContent = extraToolsHeader ? extraToolsHeader.nextElementSibling : null;
+
+  if (extraToolsHeader && extraToolsToggleIcon && extraToolsContent) {
+    // Add click event listener to toggle the collapsible content
     extraToolsHeader.addEventListener('click', () => {
-      const content = extraToolsHeader.nextElementSibling;
-      const icon = extraToolsHeader.querySelector('.toggle-icon');
-      const isExpanded = content.classList.contains('expanded');
-      toggleCollapse(content, icon, !isExpanded);
+      const isExpanded = extraToolsContent.classList.contains('expanded');
+      toggleCollapse(extraToolsContent, extraToolsToggleIcon, !isExpanded);
     });
+  } else {
+    console.warn("Extra Tools header or its components not found.");
   }
 
-  // Attach event listeners for "Add Your Own Token" in Extra Tools
+  // Attach event listeners for "Add Your Own Token" in TransferEscrow form
   const customErc20AddressGroup = document.getElementById('custom-erc20-address-group');
   const erc20ContractSelect = document.querySelector('form[data-method="transferEscrow"] select[name="_erc20Contract"]');
-  if (erc20ContractSelect) {
+  if (erc20ContractSelect && customErc20AddressGroup) {
     erc20ContractSelect.addEventListener('change', (e) => {
       if (e.target.value === 'custom') {
         customErc20AddressGroup.style.display = 'block';
@@ -272,12 +278,14 @@ function generateMethodForms() {
         customErc20AddressGroup.style.display = 'none';
       }
     });
+  } else {
+    console.warn("TransferEscrow ERC20 contract select or custom address group not found.");
   }
 
-  // Similarly handle custom ERC20 address fields in Extra Tools forms
+  // Attach event listeners for "Add Your Own Token" in DepositERC20 form
   const depositErc20ContractSelect = document.querySelector('form[data-method="depositERC20"] select[name="_erc20Contract"]');
   const customErc20AddressGroupDeposit = document.getElementById('custom-erc20-address-group-deposit');
-  if (depositErc20ContractSelect) {
+  if (depositErc20ContractSelect && customErc20AddressGroupDeposit) {
     depositErc20ContractSelect.addEventListener('change', (e) => {
       if (e.target.value === 'custom') {
         customErc20AddressGroupDeposit.style.display = 'block';
@@ -285,6 +293,8 @@ function generateMethodForms() {
         customErc20AddressGroupDeposit.style.display = 'none';
       }
     });
+  } else {
+    console.warn("DepositERC20 ERC20 contract select or custom address group not found.");
   }
 
   // Attach event listeners to Extra Tools forms
@@ -292,89 +302,6 @@ function generateMethodForms() {
   extraToolsForms.forEach(form => {
     form.addEventListener('submit', handleFormSubmit);
   });
-}
-
-// Function to Get Methods for a Facet
-function getFacetMethods(facet) {
-  const facets = {
-    'EscrowFacet': {
-      'transferEscrow': { // Modified inputs
-        inputs: [
-          { name: '_tokenId', type: 'uint256' }, // Will be hardcoded
-          { name: '_erc20Contract', type: 'address' },
-          { name: '_transferAmount', type: 'uint256' }
-        ]
-      },
-      'batchTransferEscrow': {
-        inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
-          { name: '_erc20Contracts', type: 'address[]' },
-          { name: '_recipients', type: 'address[]' },
-          { name: '_transferAmounts', type: 'uint256[]' }
-        ]
-      },
-      'batchDepositERC20': {
-        inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
-          { name: '_erc20Contracts', type: 'address[]' },
-          { name: '_values', type: 'uint256[]' }
-        ]
-      },
-      'batchDepositGHST': {
-        inputs: [
-          { name: '_tokenIds', type: 'uint256[]' },
-          { name: '_values', type: 'uint256[]' }
-        ]
-      },
-      'depositERC20': {
-        inputs: [
-          { name: '_tokenId', type: 'uint256' }, // Will be hardcoded
-          { name: '_erc20Contract', type: 'address' },
-          { name: '_value', type: 'uint256' }
-        ]
-      }
-    },
-    'AavegotchiFacet': {
-      'allAavegotchisOfOwner': {
-        inputs: [
-          { name: '_owner', type: 'address' }
-        ],
-        outputs: [
-          {
-            components: [
-              { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-              { "internalType": "string", "name": "name", "type": "string" },
-              { "internalType": "address", "name": "owner", "type": "address" },
-              { "internalType": "uint256", "name": "randomNumber", "type": "uint256" },
-              { "internalType": "uint256", "name": "status", "type": "uint256" },
-              { "internalType": "int16[6]", "name": "numericTraits", "type": "int16[6]" },
-              { "internalType": "int16[6]", "name": "modifiedNumericTraits", "type": "int16[6]" },
-              { "internalType": "uint16[16]", "name": "equippedWearables", "type": "uint16[16]" },
-              { "internalType": "address", "name": "collateral", "type": "address" },
-              { "internalType": "address", "name": "escrow", "type": "address" },
-              { "internalType": "uint256", "name": "stakedAmount", "type": "uint256" },
-              { "internalType": "uint256", "name": "minimumStake", "type": "uint256" },
-              { "internalType": "uint256", "name": "kinship", "type": "uint256" },
-              { "internalType": "uint256", "name": "lastInteracted", "type": "uint256" },
-              { "internalType": "uint256", "name": "experience", "type": "uint256" },
-              { "internalType": "uint256", "name": "toNextLevel", "type": "uint256" },
-              { "internalType": "uint256", "name": "usedSkillPoints", "type": "uint256" },
-              { "internalType": "uint256", "name": "level", "type": "uint256" },
-              { "internalType": "uint256", "name": "hauntId", "type": "uint256" },
-              { "internalType": "uint256", "name": "baseRarityScore", "type": "uint256" },
-              { "internalType": "uint256", "name": "modifiedRarityScore", "type": "uint256" }
-            ],
-            "internalType": "struct AavegotchiInfo[]",
-            "name": "aavegotchis",
-            "type": "tuple[]"
-          }
-        ]
-      }
-    }
-    // Add more facets if needed
-  };
-
-  return facets[facet];
 }
 
 // Function to Handle Form Submission
