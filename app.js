@@ -424,16 +424,20 @@ async function handleFormSubmit(event) {
   try {
     for (const input of method.inputs) {
       let value = formData.get(input.name).trim();
+      
+      // Check if the input is _transferAmount, _transferAmounts, _value, or _values
+      const isAmountField = ['_transferAmount', '_transferAmounts', '_value', '_values'].includes(input.name);
+      
       if (input.type.endsWith('[]')) {
         // Split by commas and trim whitespace
         value = value.split(',').map(item => item.trim());
-        if (input.type.startsWith('uint')) {
-          // Convert each to BigNumber
+        if (isAmountField) {
+          // Convert each to BigNumber with 18 decimals
           value = value.map(item => {
-            if (!/^\d+$/.test(item)) {
+            if (!/^\d+(\.\d+)?$/.test(item)) {
               throw new Error(`Invalid number in ${input.name}: ${item}`);
             }
-            return ethers.BigNumber.from(item);
+            return ethers.utils.parseUnits(item, 18);
           });
         } else if (input.type.startsWith('address')) {
           // Validate each address
@@ -444,14 +448,21 @@ async function handleFormSubmit(event) {
           });
         }
       } else {
-        if (input.type.startsWith('uint')) {
-          if (!/^\d+$/.test(value)) {
+        if (isAmountField) {
+          if (!/^\d+(\.\d+)?$/.test(value)) {
             throw new Error(`Invalid number for ${input.name}`);
           }
-          value = ethers.BigNumber.from(value);
-        } else if (input.type.startsWith('address')) {
-          if (!ethers.utils.isAddress(value)) {
-            throw new Error(`Invalid address for ${input.name}: ${value}`);
+          value = ethers.utils.parseUnits(value, 18);
+        } else {
+          if (input.type.startsWith('uint')) {
+            if (!/^\d+$/.test(value)) {
+              throw new Error(`Invalid number for ${input.name}`);
+            }
+            value = ethers.BigNumber.from(value);
+          } else if (input.type.startsWith('address')) {
+            if (!ethers.utils.isAddress(value)) {
+              throw new Error(`Invalid address for ${input.name}: ${value}`);
+            }
           }
         }
       }
@@ -493,7 +504,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       return;
     }
 
-    // Fetch GHST decimals
+    // Fetch GHST decimals and symbol
     const ghstDecimals = await ghstContract.decimals();
     const ghstSymbol = await ghstContract.symbol();
 
