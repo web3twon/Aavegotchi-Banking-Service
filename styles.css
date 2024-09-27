@@ -98,9 +98,13 @@ header p {
   color: #ffcc00;
 }
 
+/* 1. Remove Hover Effect on Aavegotchi Info Table Rows */
+/* Commented out to disable hover background change */
+/*
 .aavegotchi-table tr:hover {
   background-color: #4a5568;
 }
+*/
 
 /* Navigation Styles */
 nav {
@@ -112,20 +116,21 @@ nav {
 
 nav a {
   margin-right: 1.5rem;
-  color: var(--color-vibrant-blue);
+  /* 3. Make All Hyperlinks Color #FFA3B3 Regardless of Visited State */
+  color: #FFA3B3;
   text-decoration: none;
   font-weight: bold;
   transition: color var(--transition-speed);
 }
 
-/* Ensure visited links have the same color as unvisited */
-nav a:visited,
-a:visited {
-  color: var(--color-vibrant-blue);
+/* 3. Ensure All Links Have the Same Color Regardless of Visited State */
+a, a:visited {
+  color: #FFA3B3;
 }
 
-nav a:hover {
-  color: var(--color-light-pink);
+a:hover {
+  /* Maintain hover effect with light-pink */
+  color: var(--color-light-pink); /* #FFC0CB */
 }
 
 /* Button Styles */
@@ -152,11 +157,12 @@ nav a:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Copy Button Styles */
+/* 2. Change Copy Button Color to Light-Pink (#FFC0CB) */
 .copy-button {
   background: none;
   border: none;
-  color: var(--color-vibrant-blue);
+  /* Set color to light-pink */
+  color: #FFC0CB;
   cursor: pointer;
   margin-left: 0.5rem;
   font-size: 1rem;
@@ -164,7 +170,8 @@ nav a:hover {
 }
 
 .copy-button:hover {
-  color: var(--color-light-pink);
+  /* Keep hover color same as base to avoid color change */
+  color: #FFC0CB;
 }
 
 .copy-button:focus {
@@ -304,9 +311,8 @@ nav a:hover {
   color: #ffcc00;
 }
 
-.aavegotchi-table tr:hover {
-  background-color: #4a5568;
-}
+/* 1. Remove Hover Effect on Aavegotchi Info Table Rows */
+/* Already commented out above */
 
 /* Responsive Design */
 @media (max-width: 1024px) {
