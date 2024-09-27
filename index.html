@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gotchi Banking Services</title>
+  <title>Diamond DApp</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header>
   <div class="header-left">
-    <h1>Gotchi Banking Services</h1>
+    <h1>Diamond DApp</h1>
     <p>Contract: <span id="contract-address">0x86935F11C86623deC8a25696E1C19a8659CbF95d</span></p>
     <p>Network: <span id="network-name">Not Connected</span></p>
     <!-- Aavegotchi Info Section -->
@@ -28,10 +28,16 @@
   <div id="wallet-info"></div>
 
   <div class="form-wrapper">
-    <!-- Removed Facet Selection Form Group -->
-    
+    <div class="form-group">
+      <label for="facet-select">Select Facet:</label>
+      <select id="facet-select" class="select">
+        <option value="EscrowFacet">EscrowFacet</option>
+        <!-- Add more facets if needed -->
+      </select>
+    </div>
+
     <div id="method-forms">
-      <!-- Only TransferEscrow (Withdraw) Form will be dynamically inserted here -->
+      <!-- Method forms will be dynamically inserted here -->
     </div>
   </div>
 </main>
