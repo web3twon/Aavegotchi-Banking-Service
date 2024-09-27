@@ -300,7 +300,7 @@ function generateMethodForms() {
         if (input.name === '_erc20Contract') {
           label.innerText = 'ERC20 Contract Address:';
         } else if (input.name === '_transferAmount') {
-          label.innerText = 'Transfer Amount:';
+          label.innerText = 'Withdraw Amount:';
         } else {
           label.innerText = `${input.name} (${input.type}):`;
         }
