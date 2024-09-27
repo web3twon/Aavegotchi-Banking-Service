@@ -254,38 +254,26 @@ function generateMethodForms() {
     return;
   }
 
-  // Iterate over each method and create a collapsible form
-  for (const methodName in facetMethods) {
+  // Separate the "TransferEscrow" form from the others
+  const mainMethodNames = ['transferEscrow'];
+  const extraMethodNames = ['batchTransferEscrow', 'batchDepositERC20', 'batchDepositGHST', 'depositERC20'];
+
+  // Generate the always-expanded "TransferEscrow (Withdraw)" form
+  mainMethodNames.forEach(methodName => {
     const method = facetMethods[methodName];
     const formContainer = document.createElement('div');
     formContainer.className = 'form-container';
 
-    // Create the header that will be clickable
+    // Create the header without toggle (always expanded)
     const formHeader = document.createElement('div');
-    formHeader.className = 'form-header';
+    formHeader.className = 'form-header'; // Can style differently if needed
 
     const formTitle = document.createElement('h3');
-
-    // Update form title based on method
-    if (methodName === 'transferEscrow') {
-      formTitle.innerText = 'TransferEscrow (Withdraw)';
-    } else {
-      formTitle.innerText = methodName;
-    }
-
-    // Create the toggle icon (you can use a simple triangle or a plus/minus sign)
-    const toggleIcon = document.createElement('span');
-    toggleIcon.className = 'toggle-icon collapsed';
-    toggleIcon.innerHTML = '&#9660;'; // Downward triangle
-
+    formTitle.innerText = 'TransferEscrow (Withdraw)';
     formHeader.appendChild(formTitle);
-    formHeader.appendChild(toggleIcon);
     formContainer.appendChild(formHeader);
 
-    // Create the collapsible content div
-    const collapsibleContent = document.createElement('div');
-    collapsibleContent.className = 'collapsible-content';
-
+    // Create the form (always expanded)
     const form = document.createElement('form');
     form.setAttribute('data-method', methodName);
     form.addEventListener('submit', handleFormSubmit);
@@ -353,6 +341,7 @@ function generateMethodForms() {
         customInput.id = 'custom-erc20-address';
         customInput.name = 'custom-erc20-address';
         customInput.placeholder = '0x...';
+        customInput.style.display = 'none'; // Hidden by default
         formGroup.appendChild(customInput);
 
         // Event listener to show/hide custom ERC20 address input
@@ -391,15 +380,192 @@ function generateMethodForms() {
     submitButton.innerText = 'Submit';
     form.appendChild(submitButton);
 
-    collapsibleContent.appendChild(form);
-    formContainer.appendChild(collapsibleContent);
+    formContainer.appendChild(form);
     methodFormsContainer.appendChild(formContainer);
+  });
 
-    // Initially collapse the form
+  // Generate the "Extra Tools" collapsible section
+  if (extraMethodNames.length > 0) {
+    const extraToolsContainer = document.createElement('div');
+    extraToolsContainer.className = 'form-container';
+
+    // Create the header that will be clickable
+    const extraToolsHeader = document.createElement('div');
+    extraToolsHeader.className = 'form-header';
+    extraToolsHeader.style.cursor = 'pointer'; // Indicate it's clickable
+
+    const extraToolsTitle = document.createElement('h3');
+    extraToolsTitle.innerText = 'Extra Tools';
+    extraToolsHeader.appendChild(extraToolsTitle);
+
+    // Create the toggle icon
+    const toggleIcon = document.createElement('span');
+    toggleIcon.className = 'toggle-icon collapsed';
+    toggleIcon.innerHTML = '&#9660;'; // Downward triangle
+    extraToolsHeader.appendChild(toggleIcon);
+
+    extraToolsContainer.appendChild(extraToolsHeader);
+
+    // Create the collapsible content div
+    const collapsibleContent = document.createElement('div');
+    collapsibleContent.className = 'collapsible-content';
+
+    // Iterate over each extra method and create its form
+    extraMethodNames.forEach(methodName => {
+      const method = facetMethods[methodName];
+      const formContainer = document.createElement('div');
+      formContainer.className = 'form-container-inner'; // Optional: for nested styling
+
+      // Create the header that will be clickable
+      const formHeader = document.createElement('div');
+      formHeader.className = 'form-header';
+
+      const formTitle = document.createElement('h3');
+
+      // Update form title based on method
+      formTitle.innerText = methodName;
+      formHeader.appendChild(formTitle);
+
+      // Create the toggle icon
+      const formToggleIcon = document.createElement('span');
+      formToggleIcon.className = 'toggle-icon collapsed';
+      formToggleIcon.innerHTML = '&#9660;'; // Downward triangle
+      formHeader.appendChild(formToggleIcon);
+
+      formContainer.appendChild(formHeader);
+
+      // Create the collapsible content div
+      const formCollapsibleContent = document.createElement('div');
+      formCollapsibleContent.className = 'collapsible-content';
+
+      const form = document.createElement('form');
+      form.setAttribute('data-method', methodName);
+      form.addEventListener('submit', handleFormSubmit);
+
+      method.inputs.forEach(input => {
+        // Skip '_tokenId' field as it's hardcoded
+        if (input.name === '_tokenId') {
+          return;
+        }
+
+        // Skip '_recipient' field for 'transferEscrow' method (handled automatically)
+        if (methodName === 'transferEscrow' && input.name === '_recipient') {
+          return;
+        }
+
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const label = document.createElement('label');
+        label.setAttribute('for', input.name);
+
+        // Update labels based on requirements
+        if (methodName === 'transferEscrow') {
+          if (input.name === '_erc20Contract') {
+            label.innerText = 'ERC20 Contract Address:';
+          } else if (input.name === '_transferAmount') {
+            label.innerText = 'Transfer Amount:';
+          } else {
+            label.innerText = `${input.name} (${input.type}):`;
+          }
+        } else {
+          label.innerText = `${input.name} (${input.type}):`;
+        }
+
+        formGroup.appendChild(label);
+
+        let inputElement;
+        if (methodName === 'transferEscrow' && input.name === '_erc20Contract') {
+          // Create a dropdown for ERC20 Contract Address
+          inputElement = document.createElement('select');
+          inputElement.className = 'select';
+          inputElement.id = input.name;
+          inputElement.name = input.name;
+
+          // Add predefined tokens
+          predefinedTokens.forEach(token => {
+            const option = document.createElement('option');
+            option.value = token.address;
+            option.innerText = token.name;
+            inputElement.appendChild(option);
+          });
+
+          // Add "Add Your Own Token" option
+          const customOption = document.createElement('option');
+          customOption.value = 'custom';
+          customOption.innerText = 'Add Your Own Token';
+          inputElement.appendChild(customOption);
+
+          formGroup.appendChild(inputElement);
+
+          // Create a hidden input for custom ERC20 address
+          const customInput = document.createElement('input');
+          customInput.type = 'text';
+          customInput.className = 'input';
+          customInput.id = 'custom-erc20-address';
+          customInput.name = 'custom-erc20-address';
+          customInput.placeholder = '0x...';
+          customInput.style.display = 'none'; // Hidden by default
+          formGroup.appendChild(customInput);
+
+          // Event listener to show/hide custom ERC20 address input
+          inputElement.addEventListener('change', (e) => {
+            if (e.target.value === 'custom') {
+              customInput.style.display = 'block';
+            } else {
+              customInput.style.display = 'none';
+            }
+          });
+        } else {
+          if (input.type.endsWith('[]')) {
+            inputElement = document.createElement('textarea');
+            inputElement.className = 'textarea';
+            inputElement.placeholder = 'Enter comma-separated values';
+          } else {
+            inputElement = document.createElement('input');
+            inputElement.type = 'text';
+            inputElement.className = 'input';
+            if (input.type.startsWith('address')) {
+              inputElement.placeholder = '0x...';
+            }
+          }
+
+          inputElement.id = input.name;
+          inputElement.name = input.name;
+          formGroup.appendChild(inputElement);
+        }
+
+        form.appendChild(formGroup);
+      });
+
+      const submitButton = document.createElement('button');
+      submitButton.type = 'submit';
+      submitButton.className = 'button';
+      submitButton.innerText = 'Submit';
+      form.appendChild(submitButton);
+
+      formCollapsibleContent.appendChild(form);
+      formContainer.appendChild(formCollapsibleContent);
+      collapsibleContent.appendChild(formContainer);
+
+      // Initially collapse the form
+      toggleCollapse(formCollapsibleContent, formToggleIcon, false);
+
+      // Add click event listener to the form header to toggle collapse
+      formHeader.addEventListener('click', () => {
+        const isExpanded = formCollapsibleContent.classList.contains('expanded');
+        toggleCollapse(formCollapsibleContent, formToggleIcon, !isExpanded);
+      });
+    });
+
+    extraToolsContainer.appendChild(collapsibleContent);
+    methodFormsContainer.appendChild(extraToolsContainer);
+
+    // Initially collapse the "Extra Tools" section
     toggleCollapse(collapsibleContent, toggleIcon, false);
 
-    // Add click event listener to the header to toggle collapse
-    formHeader.addEventListener('click', () => {
+    // Add click event listener to the "Extra Tools" header to toggle collapse
+    extraToolsHeader.addEventListener('click', () => {
       const isExpanded = collapsibleContent.classList.contains('expanded');
       toggleCollapse(collapsibleContent, toggleIcon, !isExpanded);
     });
