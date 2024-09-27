@@ -2,7 +2,7 @@
 
 /* CSS Variables for Colors and Styling */
 :root {
-  /* Original Color Palette */
+  /* Color Palette */
   --color-dark-purple: #1C0124;
   --color-vivid-purple: #9D00FF;
   --color-light-pink: #FFC0CB;
@@ -13,11 +13,6 @@
   --color-bright-pink: #FF00A7;
   --color-light-gray: #DADADA;
   --color-vibrant-blue: #0000FF;
-  
-  /* Specific Colors for Consistency */
-  --color-secondary-dark: #2d3748;    /* Updated from original */
-  --color-secondary-medium: #434c5e;  /* Updated from original */
-  --color-accent-yellow: #ffcc00;     /* Updated from original */
   
   /* Additional Styling */
   --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -50,7 +45,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: var(--color-secondary-dark);
+  background-color: var(--color-soft-purple);
   border-bottom: 2px solid var(--color-vivid-purple);
   flex-wrap: wrap;
 }
@@ -62,7 +57,7 @@ header {
 header h1 {
   margin: 0;
   font-size: var(--font-size-large);
-  color: var(--color-accent-yellow);
+  color: var(--color-light-pink);
 }
 
 header p {
@@ -74,15 +69,15 @@ header p {
 .aavegotchi-info {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: var(--color-secondary-medium);
-  border: 1px solid var(--color-secondary-dark);
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
   border-radius: 0.5rem;
   color: #edf2f7;
 }
 
 .aavegotchi-info h2 {
   margin-top: 0;
-  color: var(--color-accent-yellow);
+  color: #ffcc00;
 }
 
 .aavegotchi-table {
@@ -95,21 +90,21 @@ header p {
 .aavegotchi-table td {
   padding: 0.75rem;
   text-align: left;
-  border-bottom: 1px solid var(--color-secondary-dark);
+  border-bottom: 1px solid #4a5568;
 }
 
 .aavegotchi-table th {
-  background-color: var(--color-secondary-medium);
-  color: var(--color-accent-yellow);
+  background-color: #434c5e;
+  color: #ffcc00;
 }
 
 .aavegotchi-table tr:hover {
-  background-color: var(--color-secondary-dark);
+  background-color: #4a5568;
 }
 
 /* Navigation Styles */
 nav {
-  background-color: var(--color-secondary-dark);
+  background-color: var(--color-dark-purple);
   border-bottom: 1px solid var(--color-vivid-purple);
   margin-top: 1rem;
   border-radius: 0.5rem;
@@ -124,7 +119,7 @@ nav a {
 }
 
 nav a:hover {
-  color: var(--color-accent-yellow);
+  color: var(--color-light-pink);
 }
 
 /* Button Styles */
@@ -164,7 +159,7 @@ nav a:hover {
   padding: 0.75rem 1rem;
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
-  background-color: var(--color-secondary-dark);
+  background-color: var(--color-dark-purple);
   color: var(--color-white);
   border: 1px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
@@ -184,14 +179,14 @@ nav a:hover {
 
 .form-group label {
   font-weight: 600;
-  color: var(--color-accent-yellow);
+  color: var(--color-light-pink);
   display: block;
   margin-bottom: 0.5rem;
 }
 
 /* Form Container */
 .form-container {
-  background-color: var(--color-secondary-medium);
+  background-color: var(--color-soft-purple);
   padding: 1.5rem;
   border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
@@ -202,7 +197,7 @@ nav a:hover {
 
 .form-container h3 {
   margin-top: 0;
-  color: var(--color-accent-yellow);
+  color: var(--color-light-pink);
   margin-bottom: 1rem;
 }
 
@@ -235,7 +230,7 @@ nav a:hover {
 
 .form-header h3 {
   margin: 0;
-  color: var(--color-accent-yellow);
+  color: var(--color-light-pink);
 }
 
 .toggle-icon {
@@ -276,16 +271,16 @@ nav a:hover {
 .aavegotchi-table td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--color-secondary-dark);
+  border-bottom: 1px solid #4a5568;
 }
 
 .aavegotchi-table th {
-  background-color: var(--color-secondary-medium);
-  color: var(--color-accent-yellow);
+  background-color: #434c5e;
+  color: #ffcc00;
 }
 
 .aavegotchi-table tr:hover {
-  background-color: var(--color-secondary-dark);
+  background-color: #4a5568;
 }
 
 /* Responsive Design */
@@ -338,7 +333,6 @@ nav a:hover {
     margin-bottom: 0.5rem;
   }
 }
-
 /* Additional Styles for Add Your Own Token */
 #custom-erc20-address {
   display: none; /* Hidden by default */
