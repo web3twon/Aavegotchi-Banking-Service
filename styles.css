@@ -77,7 +77,7 @@ header p {
 
 .aavegotchi-info h2 {
   margin-top: 0;
-  color: #ffcc00;
+  color: #ffc0cb;
 }
 
 .aavegotchi-table {
@@ -95,7 +95,7 @@ header p {
 
 .aavegotchi-table th {
   background-color: #5a0070;
-  color: #ffcc00;
+  color: #ffc0cb;
 }
 
 /* 1. Remove Hover Effect on Aavegotchi Info Table Rows */
@@ -308,7 +308,7 @@ a:hover {
 
 .aavegotchi-table th {
   background-color: #5a0070;
-  color: #ffcc00;
+  color: #ffc0cb;
 }
 
 /* 1. Remove Hover Effect on Aavegotchi Info Table Rows */
