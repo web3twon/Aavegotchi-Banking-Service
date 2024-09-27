@@ -10,7 +10,13 @@
 <header>
   <div class="header-left">
     <h1>Gotchi Banking Services</h1>
-    <p>Contract: <span id="contract-address">0x86935F11C86623deC8a25696E1C19a8659CbF95d</span></p>
+    <!-- Made the contract address a clickable link -->
+    <p>Contract: 
+      <a id="contract-address" href="https://polygonscan.com/address/0x86935F11C86623deC8a25696E1C19a8659CbF95d" target="_blank" rel="noopener noreferrer">
+        0x86935F11C86623deC8a25696E1C19a8659CbF95d
+      </a>
+    </p>
+    <!-- Updated Network display to be more user-friendly -->
     <p>Network: <span id="network-name">Not Connected</span></p>
     <!-- Aavegotchi Info Section -->
     <div id="aavegotchi-info" class="aavegotchi-info">
@@ -25,6 +31,7 @@
 </nav>
 
 <main>
+  <!-- Updated label to "Connected Wallet Address:" -->
   <div id="wallet-info"></div>
 
   <div class="form-wrapper">
