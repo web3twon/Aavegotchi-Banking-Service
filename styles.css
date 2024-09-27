@@ -2,7 +2,7 @@
 
 /* CSS Variables for Colors and Styling */
 :root {
-  /* Original Color Palette */
+  /* Color Palette */
   --color-dark-purple: #1C0124;
   --color-vivid-purple: #9D00FF;
   --color-light-pink: #FFC0CB;
@@ -362,4 +362,55 @@ nav a:hover {
   outline: none;
   border-color: var(--color-bright-blue);
   box-shadow: 0 0 10px rgba(75, 215, 255, 0.5);
+}
+
+/* Extra Tools Dropdown Styles */
+.extra-tools-container {
+  background-color: var(--color-soft-purple);
+  padding: 1.5rem;
+  border: 2px solid var(--color-vivid-purple);
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-speed);
+}
+
+.extra-tools-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.extra-tools-header h3 {
+  margin: 0;
+  color: var(--color-light-pink);
+}
+
+.extra-tools-toggle-icon {
+  transition: transform var(--transition-speed);
+}
+
+.extra-tools-toggle-icon.collapsed {
+  transform: rotate(0deg);
+}
+
+.extra-tools-toggle-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.extra-tools-collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-speed) ease-out;
+}
+
+.extra-tools-collapsible-content.expanded {
+  max-height: 1000px; /* Arbitrary high value to allow full expansion */
+  transition: max-height var(--transition-speed) ease-in;
+}
+
+.extra-tools-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
