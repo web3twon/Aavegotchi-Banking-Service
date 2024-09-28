@@ -1,3 +1,5 @@
+/* styles.css */
+
 /* CSS Variables for Colors and Styling */
 :root {
   --color-dark-purple: #1C0124;
@@ -308,7 +310,6 @@ a:hover {
   }
 }
 
-/* Mobile Styles */
 @media (max-width: 768px) {
   header {
     flex-direction: column;
@@ -369,7 +370,6 @@ a:hover {
     position: relative;
     padding-left: 50%;
     text-align: left;
-    word-break: break-word;
   }
 
   .aavegotchi-table td::before {

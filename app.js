@@ -134,7 +134,7 @@ const combinedABI = [
 const predefinedTokens = [
   {
     name: 'GHST',
-    address: '0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7',
+    address: ghstContractAddress,
   },
   // Add more predefined tokens here if needed
 ];
@@ -361,6 +361,7 @@ function generateMethodForms() {
     methodFormsContainer.appendChild(formContainer);
   });
 
+  // Include code for extra tools as per your original code
   if (extraMethodNames.length > 0) {
     const extraToolsContainer = document.createElement('div');
     extraToolsContainer.className = 'form-container';
@@ -653,15 +654,21 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       const name = aavegotchi.name;
       const escrowWallet = aavegotchi.escrow;
 
+      // Token ID Cell
       const tokenIdCell = document.createElement('td');
+      tokenIdCell.setAttribute('data-label', 'Token ID');
       tokenIdCell.innerText = tokenId;
       row.appendChild(tokenIdCell);
 
+      // Name Cell
       const nameCell = document.createElement('td');
+      nameCell.setAttribute('data-label', 'Name');
       nameCell.innerText = name;
       row.appendChild(nameCell);
 
+      // Escrow Wallet Cell
       const escrowCell = document.createElement('td');
+      escrowCell.setAttribute('data-label', 'Escrow Wallet');
       const escrowLink = document.createElement('a');
       escrowLink.href = `https://polygonscan.com/address/${escrowWallet}`;
       escrowLink.target = '_blank';
@@ -669,6 +676,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       escrowLink.innerText = escrowWallet;
       escrowCell.appendChild(escrowLink);
 
+      // Add copy button
       const copyButton = document.createElement('button');
       copyButton.className = 'copy-button';
       copyButton.setAttribute('data-copy-target', escrowWallet);
@@ -678,9 +686,11 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
 
       row.appendChild(escrowCell);
 
+      // GHST Balance Cell
       const ghstBalanceRaw = balances[index];
       const ghstBalance = ethers.utils.formatUnits(ghstBalanceRaw, ghstDecimals);
       const ghstBalanceCell = document.createElement('td');
+      ghstBalanceCell.setAttribute('data-label', `GHST Balance (${ghstSymbol})`);
       ghstBalanceCell.innerText = ghstBalance;
       row.appendChild(ghstBalanceCell);
 
