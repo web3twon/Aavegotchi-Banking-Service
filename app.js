@@ -176,7 +176,7 @@ async function connectWallet() {
           ${address}
         </a>
         <button class="copy-button" data-copy-target="${address}" aria-label="Copy Connected Wallet Address">
-          🗐
+          📄
         </button>
       </p>
     `;
@@ -361,7 +361,7 @@ function generateMethodForms() {
     methodFormsContainer.appendChild(formContainer);
   });
 
-  // Include code for extra tools as per your original code
+  // Include code for extra tools
   if (extraMethodNames.length > 0) {
     const extraToolsContainer = document.createElement('div');
     extraToolsContainer.className = 'form-container';
@@ -633,7 +633,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
 
-    const headers = ['Token ID', 'Name', 'Escrow Wallet', `GHST Balance (${ghstSymbol})`];
+    const headers = ['Token ID', 'Name', 'Escrow Wallet', 'GHST Balance'];
     headers.forEach((headerText) => {
       const th = document.createElement('th');
       th.innerText = headerText;
@@ -681,7 +681,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       copyButton.className = 'copy-button';
       copyButton.setAttribute('data-copy-target', escrowWallet);
       copyButton.setAttribute('aria-label', 'Copy Escrow Wallet Address');
-      copyButton.innerText = '🗐';
+      copyButton.innerText = '📄';
       escrowCell.appendChild(copyButton);
 
       row.appendChild(escrowCell);
@@ -690,7 +690,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       const ghstBalanceRaw = balances[index];
       const ghstBalance = ethers.utils.formatUnits(ghstBalanceRaw, ghstDecimals);
       const ghstBalanceCell = document.createElement('td');
-      ghstBalanceCell.setAttribute('data-label', `GHST Balance (${ghstSymbol})`);
+      ghstBalanceCell.setAttribute('data-label', 'GHST Balance');
       ghstBalanceCell.innerText = ghstBalance;
       row.appendChild(ghstBalanceCell);
 
@@ -722,7 +722,7 @@ function initializeCopyButtons() {
         .then(() => {
           button.innerText = '✅';
           setTimeout(() => {
-            button.innerText = '🗐';
+            button.innerText = '📄';
           }, 2000);
         })
         .catch((err) => {
