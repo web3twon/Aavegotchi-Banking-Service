@@ -643,4 +643,89 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
     table.appendChild(thead);
 
     const tbody = document.createElement('tbody');
-    const balancePromises = aavegotchis.map((aav
+    const balancePromises = aavegotchis.map((aavegotchi) => ghstContract.balanceOf(aavegotchi.escrow));
+    const balances = await Promise.all(balancePromises);
+
+    aavegotchis.forEach((aavegotchi, index) => {
+      const row = document.createElement('tr');
+
+      const tokenId = aavegotchi.tokenId.toString();
+      const name = aavegotchi.name;
+      const escrowWallet = aavegotchi.escrow;
+
+      const tokenIdCell = document.createElement('td');
+      tokenIdCell.innerText = tokenId;
+      row.appendChild(tokenIdCell);
+
+      const nameCell = document.createElement('td');
+      nameCell.innerText = name;
+      row.appendChild(nameCell);
+
+      const escrowCell = document.createElement('td');
+      const escrowLink = document.createElement('a');
+      escrowLink.href = `https://polygonscan.com/address/${escrowWallet}`;
+      escrowLink.target = '_blank';
+      escrowLink.rel = 'noopener noreferrer';
+      escrowLink.innerText = escrowWallet;
+      escrowCell.appendChild(escrowLink);
+
+      const copyButton = document.createElement('button');
+      copyButton.className = 'copy-button';
+      copyButton.setAttribute('data-copy-target', escrowWallet);
+      copyButton.setAttribute('aria-label', 'Copy Escrow Wallet Address');
+      copyButton.innerText = '🗐';
+      escrowCell.appendChild(copyButton);
+
+      row.appendChild(escrowCell);
+
+      const ghstBalanceRaw = balances[index];
+      const ghstBalance = ethers.utils.formatUnits(ghstBalanceRaw, ghstDecimals);
+      const ghstBalanceCell = document.createElement('td');
+      ghstBalanceCell.innerText = ghstBalance;
+      row.appendChild(ghstBalanceCell);
+
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    aavegotchiInfoContainer.innerHTML = '<h2>Your Aavegotchis:</h2>';
+    aavegotchiInfoContainer.appendChild(table);
+
+    initializeCopyButtons();
+  } catch (error) {
+    console.error('Error fetching Aavegotchis:', error);
+    aavegotchiInfoContainer.innerHTML = '<p>Error fetching Aavegotchis. See console for details.</p>';
+  }
+}
+
+// Function to Initialize Copy Button Event Listeners
+function initializeCopyButtons() {
+  const copyButtons = document.querySelectorAll('.copy-button');
+  copyButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const addressToCopy = button.getAttribute('data-copy-target');
+      if (!addressToCopy) return;
+
+      navigator.clipboard
+        .writeText(addressToCopy)
+        .then(() => {
+          button.innerText = '✅';
+          setTimeout(() => {
+            button.innerText = '🗐';
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy!', err);
+          alert('Failed to copy the address. Please try again.');
+        });
+    });
+  });
+}
+
+// Initial call to generate method forms if the wallet is already connected
+window.onload = async () => {
+  if (window.ethereum && window.ethereum.selectedAddress) {
+    await connectWallet();
+  }
+};
