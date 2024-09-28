@@ -16,9 +16,7 @@
       <a id="contract-address-link" href="https://polygonscan.com/address/0x86935F11C86623deC8a25696E1C19a8659CbF95d" target="_blank" rel="noopener noreferrer">
         0x86935F11C86623deC8a25696E1C19a8659CbF95d
       </a>
-      <button class="copy-button" data-copy-target="0x86935F11C86623deC8a25696E1C19a8659CbF95d" aria-label="Copy Contract Address">
-        📄
-      </button>
+      <!-- Copy button removed as per your request -->
     </p>
     <p>Network: <span id="network-name">Not Connected</span></p>
     <div id="aavegotchi-info" class="aavegotchi-info">
@@ -28,10 +26,6 @@
   <button id="connect-wallet" class="button">Connect Wallet</button>
 </header>
 
-<nav>
-  <a href="https://eips.ethereum.org/EIPS/eip-2535" target="_blank">Diamond Standard (EIP-2535)</a>
-</nav>
-
 <main>
   <div id="wallet-info"></div>
   <div class="form-wrapper">
@@ -40,6 +34,13 @@
     </div>
   </div>
 </main>
+
+<!-- Moved the Diamond Standard link to the footer -->
+<footer>
+  <nav>
+    <a href="https://eips.ethereum.org/EIPS/eip-2535" target="_blank">Diamond Standard (EIP-2535)</a>
+  </nav>
+</footer>
 
 <!-- Load Ethers.js UMD build via CDN -->
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>

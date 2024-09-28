@@ -175,9 +175,7 @@ async function connectWallet() {
         <a href="https://polygonscan.com/address/${address}" target="_blank" rel="noopener noreferrer">
           ${address}
         </a>
-        <button class="copy-button" data-copy-target="${address}" aria-label="Copy Connected Wallet Address">
-          📄
-        </button>
+        <!-- Copy button removed as per your request -->
       </p>
     `;
 
@@ -361,7 +359,7 @@ function generateMethodForms() {
     methodFormsContainer.appendChild(formContainer);
   });
 
-  // Include code for extra tools
+  // Include code for extra tools as per your original code
   if (extraMethodNames.length > 0) {
     const extraToolsContainer = document.createElement('div');
     extraToolsContainer.className = 'form-container';

@@ -34,7 +34,7 @@ body {
   font-size: var(--font-size-base);
 }
 
-header, nav, main {
+header, nav, main, footer {
   padding: 1.5rem;
 }
 
@@ -45,6 +45,22 @@ header {
   background-color: var(--color-soft-purple);
   border-bottom: 2px solid var(--color-vivid-purple);
   flex-wrap: wrap;
+}
+
+.footer {
+  background-color: var(--color-dark-purple);
+  border-top: 2px solid var(--color-vivid-purple);
+}
+
+.footer nav a {
+  color: #FFA3B3;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color var(--transition-speed);
+}
+
+.footer nav a:hover {
+  color: var(--color-light-pink);
 }
 
 .header-left {
@@ -278,7 +294,7 @@ a:hover {
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  header, nav, main {
+  header, nav, main, footer {
     padding: 1rem;
   }
   
