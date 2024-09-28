@@ -308,6 +308,7 @@ a:hover {
   }
 }
 
+/* Mobile Styles */
 @media (max-width: 768px) {
   header {
     flex-direction: column;
@@ -348,13 +349,52 @@ a:hover {
   }
 }
 
-@media (max-width: 480px) {
-  header, nav, main {
-    padding: 0.5rem;
+/* Mobile Styles for Tables */
+@media (max-width: 600px) {
+  /* Adjusting table for mobile devices */
+  .aavegotchi-table, .aavegotchi-table thead, .aavegotchi-table tbody, .aavegotchi-table th, .aavegotchi-table td, .aavegotchi-table tr {
+    display: block;
   }
 
+  .aavegotchi-table {
+    border: none;
+  }
+
+  .aavegotchi-table tr {
+    margin-bottom: 1rem;
+  }
+
+  .aavegotchi-table td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    word-break: break-word;
+  }
+
+  .aavegotchi-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .aavegotchi-table th {
+    display: none;
+  }
+
+  .aavegotchi-table td a {
+    word-break: break-all;
+  }
+
+  /* Adjust font sizes */
   header h1 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   .header-left p, .header-left h1 {
@@ -377,11 +417,6 @@ a:hover {
 
   .form-header h3 {
     font-size: 1rem;
-  }
-
-  .aavegotchi-table th, .aavegotchi-table td {
-    font-size: 0.8rem;
-    padding: 0.25rem 0.5rem;
   }
 }
 
