@@ -176,6 +176,17 @@ header p {
   margin-left: 5px;
 }
 
+/* New Styles for Owned/Rented Status */
+.status-owned {
+  color: #28a745; /* Green color for owned */
+  font-weight: bold;
+}
+
+.status-rented {
+  color: #dc3545; /* Red color for rented */
+  font-weight: bold;
+}
+
 /* Navigation Styles */
 nav {
   background-color: var(--color-dark-purple);
