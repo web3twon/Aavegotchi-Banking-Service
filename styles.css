@@ -115,10 +115,13 @@ header p {
 .aavegotchi-info {
   margin-top: 30px; /* Increased vertical spacing */
   padding: 20px; /* Increased padding inside the content box */
-  background-color: var(--color-dark-purple); /* Updated background color */
+  background-color: var(--color-soft-purple); /* Updated background color */
   border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
   color: #edf2f7;
+  /* Added max-height and overflow for scrollable content */
+  max-height: 400px; /* Adjust this value as needed */
+  overflow-y: auto;
 }
 
 .aavegotchi-info h2 {
@@ -144,7 +147,7 @@ header p {
 }
 
 .aavegotchi-table th {
-  background-color: #7a4dad;
+  background-color: #5a0070;
   color: #ffc0cb;
 }
 
@@ -180,7 +183,7 @@ nav {
 }
 
 nav a {
-  color: #ffa3b3;
+  color: #FFA3B3;
   text-decoration: none;
   font-weight: bold;
   transition: color var(--transition-speed);
@@ -420,6 +423,7 @@ a:hover {
 
   .aavegotchi-info {
     padding: 15px;
+    max-height: 300px; /* Adjusted max-height for smaller screens */
   }
 
   .aavegotchi-table th,
@@ -502,7 +506,7 @@ a:hover {
   }
 
   .aavegotchi-table tr {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Reduced margin between rows */
   }
 
   .aavegotchi-table td {
@@ -510,6 +514,8 @@ a:hover {
     position: relative;
     padding-left: 50%;
     text-align: left;
+    padding-top: 5px; /* Reduced padding for tighter spacing */
+    padding-bottom: 5px;
   }
 
   .aavegotchi-table td::before {
@@ -557,6 +563,11 @@ a:hover {
 
   .form-header h3 {
     font-size: 22px;
+  }
+
+  /* Adjusted max-height for mobile devices */
+  .aavegotchi-info {
+    max-height: 250px; /* Adjust this value as needed */
   }
 }
 
