@@ -119,10 +119,9 @@ header p {
   border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
   color: #edf2f7;
-  /* Added max-height and overflow for scrollable content */
   max-height: 400px; /* Adjust this value as needed */
-  overflow-y: auto;
-  overflow-x: auto; /* Added horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden; /* Remove horizontal scrolling */
 }
 
 .aavegotchi-info h2 {
@@ -136,7 +135,7 @@ header p {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  min-width: 600px; /* Ensures table doesn't shrink too small */
+  /* Removed min-width to allow table to shrink on small screens */
 }
 
 .aavegotchi-table th,
@@ -146,6 +145,7 @@ header p {
   border-bottom: 1px solid #4a5568;
   font-size: 16px; /* Content text font size */
   font-weight: 400; /* Content text font weight */
+  word-break: break-word; /* Ensure content wraps within cells */
 }
 
 .aavegotchi-table th {
@@ -162,9 +162,9 @@ header p {
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 120px;
   display: inline-block;
   vertical-align: middle;
+  word-break: break-word; /* Ensure long addresses wrap */
 }
 
 .aavegotchi-table td a:hover {
@@ -475,15 +475,15 @@ a:hover {
 
   /* Adjusted for mobile UI enhancements */
   header h1 {
-    font-size: 28px;
+    font-size: 24px; /* Reduced font size for smaller screens */
   }
 
   .aavegotchi-info h2 {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .form-container h3 {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .form-group label,
@@ -492,59 +492,42 @@ a:hover {
   .textarea,
   .aavegotchi-table th,
   .aavegotchi-table td {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
-/* Ensure the table remains in tabular format on mobile devices */
+/* Additional Adjustments for Small Screens */
 @media (max-width: 600px) {
-  /* Adjust font sizes */
-  header h1 {
-    font-size: 28px;
+  /* Reduce padding and font sizes in table cells */
+  .aavegotchi-table th,
+  .aavegotchi-table td {
+    padding: 5px;
+    font-size: 12px;
   }
 
-  .header-left p, .header-left h1 {
-    text-align: center;
+  /* Ensure table fits within the viewport */
+  .aavegotchi-table {
     width: 100%;
   }
 
-  .form-group label {
-    font-size: 16px;
+  /* Ensure table cells wrap text */
+  .aavegotchi-table th,
+  .aavegotchi-table td {
+    word-break: break-word;
   }
 
-  .select, .input, .textarea {
-    font-size: 16px;
-    padding: 15px;
-  }
-
-  .form-container {
-    padding: 15px;
+  /* Adjust heading sizes */
+  header h1 {
+    font-size: 20px;
   }
 
   .form-header h3 {
-    font-size: 22px;
+    font-size: 16px;
   }
 
-  /* Adjusted max-height for mobile devices */
+  /* Adjust .aavegotchi-info max-height */
   .aavegotchi-info {
-    max-height: 400px; /* Same as desktop */
-  }
-
-  /* Ensure table elements maintain their display properties */
-  .aavegotchi-table, .aavegotchi-table thead, .aavegotchi-table tbody, .aavegotchi-table tr, .aavegotchi-table th, .aavegotchi-table td {
-    display: table; /* Ensure display remains as table elements */
-  }
-
-  .aavegotchi-table tr {
-    display: table-row;
-  }
-
-  .aavegotchi-table th, .aavegotchi-table td {
-    display: table-cell;
-  }
-
-  .aavegotchi-table td::before {
-    content: none; /* Remove pseudo-elements if any */
+    max-height: 300px; /* Adjust as needed */
   }
 }
 
