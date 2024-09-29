@@ -114,9 +114,9 @@ header p {
 /* Aavegotchi Info Styles */
 .aavegotchi-info {
   margin-top: 30px; /* Increased vertical spacing */
-  padding: 20px; /* Increased padding inside the black content box */
-  background-color: #1c0124;
-  border: 1px solid #4a5568;
+  padding: 20px; /* Increased padding inside the content box */
+  background-color: var(--color-soft-purple); /* Updated background color */
+  border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
   color: #edf2f7;
 }
@@ -196,9 +196,9 @@ a:hover {
 
 /* Button Styles */
 .button {
-  background-color: var(--color-bright-pink);
+  background: linear-gradient(135deg, var(--color-bright-pink), var(--color-vivid-purple));
   color: var(--color-white);
-  padding: 10px 30px; /* Increased padding for pink bar */
+  padding: 10px 30px; /* Increased padding for buttons */
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
@@ -208,7 +208,7 @@ a:hover {
 }
 
 .button:hover {
-  background-color: #d81b60; /* Slightly darker on hover */
+  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink)); /* Reverse gradient on hover */
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
@@ -325,14 +325,14 @@ a:hover {
 
 /* Submit Button Styles */
 .button.submit-button {
-  background-color: var(--color-bright-pink);
+  background: linear-gradient(135deg, var(--color-bright-pink), var(--color-vivid-purple));
   padding: 15px 40px; /* Increased padding for submit button */
   font-size: 16px;
   border-radius: 6px;
 }
 
 .button.submit-button:hover {
-  background-color: #d81b60;
+  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink)); /* Reverse gradient on hover */
 }
 
 /* Alert Styles */
