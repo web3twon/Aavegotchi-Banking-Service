@@ -2,22 +2,23 @@
 
 /* CSS Variables for Colors and Styling */
 :root {
-  --color-dark-purple: #1C0124;
+  --color-dark-purple: #5e338f; /* Updated background color */
   --color-vivid-purple: #9D00FF;
   --color-light-pink: #FFC0CB;
-  --color-soft-purple: #5A0070;
+  --color-soft-purple: #7a4dad; /* Adjusted for better contrast */
   --color-bright-blue: #4BD7FF;
   --color-orange: #FF7400;
   --color-white: #FFFFFF;
-  --color-bright-pink: #FF00A7;
+  --color-bright-pink: #e91e63; /* Vibrant pink for buttons */
   --color-light-gray: #DADADA;
   --color-vibrant-blue: #0000FF;
+  --color-border-gray: #bdbdbd;
   --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-size-base: 16px;
-  --font-size-large: 1.5rem;
-  --border-radius: 0.5rem;
+  --font-size-large: 28px; /* Increased main heading font size */
+  --border-radius: 8px; /* Increased border radius */
   --transition-speed: 0.3s;
-  --max-form-width: 600px;
+  --max-form-width: 1200px;
   --input-height: 3rem;
 }
 
@@ -35,7 +36,7 @@ body {
 }
 
 header, nav, main, footer {
-  padding: 1.5rem;
+  padding: 1.5rem 15%;
 }
 
 header {
@@ -70,18 +71,50 @@ header {
 header h1 {
   margin: 0;
   font-size: var(--font-size-large);
-  color: var(--color-light-pink);
+  font-weight: 700; /* Bold font weight for main heading */
+  color: var(--color-white); /* Pure white for high contrast */
 }
 
 header p {
-  margin: 0.25rem 0;
+  margin: 0.5rem 0;
   color: var(--color-light-gray);
+  font-size: 14px; /* Reduced font size for addresses */
+}
+
+.address-link {
+  color: #ff4081;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.address-link:hover {
+  color: #f50057;
+  text-decoration: underline;
+}
+
+.address-link::after {
+  content: attr(title);
+  position: absolute;
+  left: -9999px;
+  overflow: hidden;
+}
+
+.network-name {
+  font-size: 16px;
+}
+
+.wallet-info {
+  margin-top: 30px; /* Increased vertical spacing */
 }
 
 /* Aavegotchi Info Styles */
 .aavegotchi-info {
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: 30px; /* Increased vertical spacing */
+  padding: 20px; /* Increased padding inside the black content box */
   background-color: #1c0124;
   border: 1px solid #4a5568;
   border-radius: var(--border-radius);
@@ -90,25 +123,52 @@ header p {
 
 .aavegotchi-info h2 {
   margin-top: 0;
-  color: #ffc0cb;
+  font-size: 22px; /* Subheading font size */
+  font-weight: 600; /* Subheading font weight */
+  color: var(--color-white); /* Pure white for high contrast */
 }
 
 .aavegotchi-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0.5rem;
+  margin-top: 15px;
 }
 
 .aavegotchi-table th,
 .aavegotchi-table td {
-  padding: 0.75rem 1rem;
+  padding: 15px;
   text-align: left;
   border-bottom: 1px solid #4a5568;
+  font-size: 16px; /* Content text font size */
+  font-weight: 400; /* Content text font weight */
 }
 
 .aavegotchi-table th {
   background-color: #5a0070;
   color: #ffc0cb;
+}
+
+.aavegotchi-table td {
+  vertical-align: middle;
+}
+
+.aavegotchi-table td a {
+  color: #ff4081;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.aavegotchi-table td a:hover {
+  color: #f50057;
+  text-decoration: underline;
+}
+
+.aavegotchi-table td .copy-button {
+  margin-left: 5px;
 }
 
 /* Navigation Styles */
@@ -120,7 +180,6 @@ nav {
 }
 
 nav a {
-  margin-right: 1.5rem;
   color: #FFA3B3;
   text-decoration: none;
   font-weight: bold;
@@ -137,26 +196,26 @@ a:hover {
 
 /* Button Styles */
 .button {
-  background: linear-gradient(135deg, var(--color-bright-pink), var(--color-vivid-purple));
+  background-color: var(--color-bright-pink);
   color: var(--color-white);
-  padding: 0.75rem 1.5rem;
+  padding: 10px 30px; /* Increased padding for pink bar */
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 16px;
   transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added drop shadow */
 }
 
 .button:hover {
-  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink));
+  background-color: #d81b60; /* Slightly darker on hover */
   transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
 .button:active {
   transform: translateY(0);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Copy Button Styles */
@@ -165,9 +224,11 @@ a:hover {
   border: none;
   color: #FFC0CB;
   cursor: pointer;
-  margin-left: 0.5rem;
-  font-size: 1rem;
+  margin-left: 5px;
+  font-size: 16px;
   transition: color var(--transition-speed);
+  padding: 10px; /* Added padding for larger interactive area */
+  position: relative;
 }
 
 .copy-button:hover {
@@ -178,35 +239,61 @@ a:hover {
   outline: none;
 }
 
+.copy-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1c0124;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-speed);
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.copy-button:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Form Wrapper */
 .form-wrapper {
   max-width: var(--max-form-width);
-  margin: 0 auto;
-  padding: 1rem;
+  margin: 30px auto; /* Applied 30px margin at top and bottom */
+  padding: 15px; /* Added 15px padding inside each section */
 }
 
 /* Form Styles */
 .select, .input, .textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 15px; /* Increased padding inside input fields */
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   background-color: var(--color-dark-purple);
   color: var(--color-white);
-  border: 1px solid var(--color-vivid-purple);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
+  border: 2px solid var(--color-border-gray); /* Added 2px border */
+  border-radius: 6px; /* Set border radius to 6px */
+  font-size: 16px;
   transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
 
 .select:hover, .input:hover, .textarea:hover {
-  border-color: var(--color-bright-blue);
+  border-color: var(--color-bright-pink);
 }
 
 .select:focus, .input:focus, .textarea:focus {
   outline: none;
-  border-color: var(--color-bright-blue);
-  box-shadow: 0 0 10px rgba(75, 215, 255, 0.5);
+  border-color: #ff4081; /* Border color changes when focused */
+  box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+}
+
+.form-group {
+  margin-bottom: 20px; /* Increased spacing between form elements */
 }
 
 .form-group label {
@@ -214,23 +301,38 @@ a:hover {
   color: var(--color-light-pink);
   display: block;
   margin-bottom: 0.5rem;
+  font-size: 16px;
 }
 
 /* Form Container */
 .form-container {
   background-color: var(--color-soft-purple);
-  padding: 1.5rem;
+  padding: 20px; /* Added padding inside section containers */
   border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
-  margin-bottom: 1.5rem;
+  margin-bottom: 30px; /* Reduced vertical gaps */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all var(--transition-speed);
 }
 
 .form-container h3 {
   margin-top: 0;
-  color: var(--color-light-pink);
-  margin-bottom: 1rem;
+  font-size: 24px; /* Section title font size */
+  font-weight: 600; /* Section title font weight */
+  color: var(--color-white); /* Pure white for high contrast */
+  margin-bottom: 20px;
+}
+
+/* Submit Button Styles */
+.button.submit-button {
+  background-color: var(--color-bright-pink);
+  padding: 15px 40px; /* Increased padding for submit button */
+  font-size: 16px;
+  border-radius: 6px;
+}
+
+.button.submit-button:hover {
+  background-color: #d81b60;
 }
 
 /* Alert Styles */
@@ -262,7 +364,7 @@ a:hover {
 
 .form-header h3 {
   margin: 0;
-  color: var(--color-light-pink);
+  color: var(--color-white);
 }
 
 .toggle-icon {
@@ -295,7 +397,7 @@ a:hover {
 /* Responsive Design */
 @media (max-width: 1024px) {
   header, nav, main, footer {
-    padding: 1rem;
+    padding: 1rem 5%;
   }
   
   .header-left {
@@ -317,12 +419,12 @@ a:hover {
   }
 
   .aavegotchi-info {
-    padding: 0.75rem;
+    padding: 15px;
   }
 
   .aavegotchi-table th,
   .aavegotchi-table td {
-    padding: 0.5rem 0.75rem;
+    padding: 10px;
   }
 }
 
@@ -347,7 +449,7 @@ a:hover {
   }
 
   .form-container {
-    padding: 1rem;
+    padding: 15px;
   }
 
   .form-header {
@@ -361,8 +463,30 @@ a:hover {
 
   .button {
     width: 100%;
-    padding: 0.75rem;
+    padding: 15px;
     font-size: 1rem;
+  }
+
+  /* Adjusted for mobile UI enhancements */
+  header h1 {
+    font-size: 28px;
+  }
+
+  .aavegotchi-info h2 {
+    font-size: 22px;
+  }
+
+  .form-container h3 {
+    font-size: 22px;
+  }
+
+  .form-group label,
+  .select,
+  .input,
+  .textarea,
+  .aavegotchi-table th,
+  .aavegotchi-table td {
+    font-size: 16px;
   }
 }
 
@@ -410,7 +534,7 @@ a:hover {
 
   /* Adjust font sizes */
   header h1 {
-    font-size: 1.5rem;
+    font-size: 28px;
   }
 
   .header-left p, .header-left h1 {
@@ -419,20 +543,20 @@ a:hover {
   }
 
   .form-group label {
-    font-size: 0.9rem;
+    font-size: 16px;
   }
 
   .select, .input, .textarea {
-    font-size: 0.9rem;
-    padding: 0.5rem;
+    font-size: 16px;
+    padding: 15px;
   }
 
   .form-container {
-    padding: 0.75rem;
+    padding: 15px;
   }
 
   .form-header h3 {
-    font-size: 1rem;
+    font-size: 22px;
   }
 }
 

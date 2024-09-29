@@ -170,12 +170,13 @@ async function connectWallet() {
     const address = await signer.getAddress();
     userAddress = address;
 
+    const shortAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
+
     walletInfo.innerHTML = `
       <p>Connected Wallet Address: 
-        <a href="https://polygonscan.com/address/${address}" target="_blank" rel="noopener noreferrer">
-          ${address}
+        <a href="https://polygonscan.com/address/${address}" target="_blank" rel="noopener noreferrer" class="address-link" title="${address}">
+          ${shortAddress}
         </a>
-        <!-- Copy button removed as per your request -->
       </p>
     `;
 
@@ -195,7 +196,7 @@ async function connectWallet() {
     contract = new ethers.Contract(contractAddress, combinedABI, signer);
     ghstContract = new ethers.Contract(ghstContractAddress, ghstABI, provider);
 
-    connectWalletButton.innerText = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
+    connectWalletButton.innerText = `Connected: ${shortAddress}`;
 
     generateMethodForms();
     await fetchAndDisplayAavegotchis(address);
@@ -351,7 +352,7 @@ function generateMethodForms() {
 
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
-    submitButton.className = 'button';
+    submitButton.className = 'button submit-button';
     submitButton.innerText = 'Submit';
     form.appendChild(submitButton);
 
@@ -359,7 +360,7 @@ function generateMethodForms() {
     methodFormsContainer.appendChild(formContainer);
   });
 
-  // Include code for extra tools as per your original code
+  // Include code for extra tools
   if (extraMethodNames.length > 0) {
     const extraToolsContainer = document.createElement('div');
     extraToolsContainer.className = 'form-container';
@@ -444,7 +445,7 @@ function generateMethodForms() {
 
       const submitButton = document.createElement('button');
       submitButton.type = 'submit';
-      submitButton.className = 'button';
+      submitButton.className = 'button submit-button';
       submitButton.innerText = 'Submit';
       form.appendChild(submitButton);
 
@@ -651,6 +652,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       const tokenId = aavegotchi.tokenId.toString();
       const name = aavegotchi.name;
       const escrowWallet = aavegotchi.escrow;
+      const shortEscrowWallet = `${escrowWallet.slice(0, 6)}...${escrowWallet.slice(-4)}`;
 
       // Token ID Cell
       const tokenIdCell = document.createElement('td');
@@ -671,7 +673,9 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       escrowLink.href = `https://polygonscan.com/address/${escrowWallet}`;
       escrowLink.target = '_blank';
       escrowLink.rel = 'noopener noreferrer';
-      escrowLink.innerText = escrowWallet;
+      escrowLink.className = 'address-link';
+      escrowLink.title = escrowWallet;
+      escrowLink.innerText = shortEscrowWallet;
       escrowCell.appendChild(escrowLink);
 
       // Add copy button
@@ -679,6 +683,7 @@ async function fetchAndDisplayAavegotchis(ownerAddress) {
       copyButton.className = 'copy-button';
       copyButton.setAttribute('data-copy-target', escrowWallet);
       copyButton.setAttribute('aria-label', 'Copy Escrow Wallet Address');
+      copyButton.setAttribute('data-tooltip', 'Click to copy');
       copyButton.innerText = '📄';
       escrowCell.appendChild(copyButton);
 
