@@ -2,21 +2,21 @@
 
 /* CSS Variables for Colors and Styling */
 :root {
-  --color-dark-purple: #5e338f; /* Updated background color */
+  --color-dark-purple: #5e338f;
   --color-vivid-purple: #9D00FF;
   --color-light-pink: #FFC0CB;
-  --color-soft-purple: #7a4dad; /* Adjusted for better contrast */
+  --color-soft-purple: #7a4dad;
   --color-bright-blue: #4BD7FF;
   --color-orange: #FF7400;
   --color-white: #FFFFFF;
-  --color-bright-pink: #e91e63; /* Vibrant pink for buttons */
+  --color-bright-pink: #e91e63;
   --color-light-gray: #DADADA;
   --color-vibrant-blue: #0000FF;
   --color-border-gray: #bdbdbd;
   --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-size-base: 16px;
-  --font-size-large: 28px; /* Increased main heading font size */
-  --border-radius: 8px; /* Increased border radius */
+  --font-size-large: 28px;
+  --border-radius: 8px;
   --transition-speed: 0.3s;
   --max-form-width: 1200px;
   --input-height: 3rem;
@@ -71,14 +71,14 @@ header {
 header h1 {
   margin: 0;
   font-size: var(--font-size-large);
-  font-weight: 700; /* Bold font weight for main heading */
-  color: var(--color-white); /* Pure white for high contrast */
+  font-weight: 700;
+  color: var(--color-white);
 }
 
 header p {
   margin: 0.5rem 0;
   color: var(--color-light-gray);
-  font-size: 14px; /* Reduced font size for addresses */
+  font-size: 14px;
 }
 
 .address-link {
@@ -108,34 +108,33 @@ header p {
 }
 
 .wallet-info {
-  margin-top: 30px; /* Increased vertical spacing */
+  margin-top: 30px;
 }
 
 /* Aavegotchi Info Styles */
 .aavegotchi-info {
-  margin-top: 30px; /* Increased vertical spacing */
-  padding: 20px; /* Increased padding inside the content box */
-  background-color: var(--color-dark-purple); /* Updated background color */
+  margin-top: 30px;
+  padding: 20px;
+  background-color: var(--color-dark-purple);
   border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
   color: #edf2f7;
-  max-height: 400px; /* Adjust this value as needed */
-  overflow-y: auto; /* Allow vertical scrolling */
-  overflow-x: hidden; /* Remove horizontal scrolling */
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .aavegotchi-info h2 {
   margin-top: 0;
-  font-size: 22px; /* Subheading font size */
-  font-weight: 600; /* Subheading font weight */
-  color: var(--color-white); /* Pure white for high contrast */
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-white);
 }
 
 .aavegotchi-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  /* Removed min-width to allow table to shrink on small screens */
 }
 
 .aavegotchi-table th,
@@ -143,9 +142,9 @@ header p {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid #4a5568;
-  font-size: 16px; /* Content text font size */
-  font-weight: 400; /* Content text font weight */
-  word-break: break-word; /* Ensure content wraps within cells */
+  font-size: 16px;
+  font-weight: 400;
+  word-break: break-word;
 }
 
 .aavegotchi-table th {
@@ -164,7 +163,7 @@ header p {
   text-overflow: ellipsis;
   display: inline-block;
   vertical-align: middle;
-  word-break: break-word; /* Ensure long addresses wrap */
+  word-break: break-word;
 }
 
 .aavegotchi-table td a:hover {
@@ -178,12 +177,12 @@ header p {
 
 /* New Styles for Owned/Rented Status */
 .status-owned {
-  color: #28a745; /* Green color for owned */
+  color: #28a745;
   font-weight: bold;
 }
 
 .status-rented {
-  color: #dc3545; /* Red color for rented */
+  color: #dc3545;
   font-weight: bold;
 }
 
@@ -214,17 +213,17 @@ a:hover {
 .button {
   background: linear-gradient(135deg, var(--color-bright-pink), var(--color-vivid-purple));
   color: var(--color-white);
-  padding: 10px 30px; /* Increased padding for buttons */
+  padding: 10px 30px;
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
   font-size: 16px;
   transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added drop shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .button:hover {
-  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink)); /* Reverse gradient on hover */
+  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink));
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
@@ -243,7 +242,7 @@ a:hover {
   margin-left: 5px;
   font-size: 16px;
   transition: color var(--transition-speed);
-  padding: 10px; /* Added padding for larger interactive area */
+  padding: 10px;
   position: relative;
 }
 
@@ -280,20 +279,20 @@ a:hover {
 /* Form Wrapper */
 .form-wrapper {
   max-width: var(--max-form-width);
-  margin: 30px auto; /* Applied 30px margin at top and bottom */
-  padding: 15px; /* Added 15px padding inside each section */
+  margin: 30px auto;
+  padding: 15px;
 }
 
 /* Form Styles */
 .select, .input, .textarea {
   width: 100%;
-  padding: 15px; /* Increased padding inside input fields */
+  padding: 15px;
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   background-color: var(--color-dark-purple);
   color: var(--color-white);
-  border: 2px solid var(--color-border-gray); /* Added 2px border */
-  border-radius: 6px; /* Set border radius to 6px */
+  border: 2px solid var(--color-border-gray);
+  border-radius: 6px;
   font-size: 16px;
   transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
@@ -304,12 +303,12 @@ a:hover {
 
 .select:focus, .input:focus, .textarea:focus {
   outline: none;
-  border-color: #ff4081; /* Border color changes when focused */
+  border-color: #ff4081;
   box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
 }
 
 .form-group {
-  margin-bottom: 20px; /* Increased spacing between form elements */
+  margin-bottom: 20px;
 }
 
 .form-group label {
@@ -323,32 +322,32 @@ a:hover {
 /* Form Container */
 .form-container {
   background-color: var(--color-soft-purple);
-  padding: 20px; /* Added padding inside section containers */
+  padding: 20px;
   border: 2px solid var(--color-vivid-purple);
   border-radius: var(--border-radius);
-  margin-bottom: 30px; /* Reduced vertical gaps */
+  margin-bottom: 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all var(--transition-speed);
 }
 
 .form-container h3 {
   margin-top: 0;
-  font-size: 24px; /* Section title font size */
-  font-weight: 600; /* Section title font weight */
-  color: var(--color-white); /* Pure white for high contrast */
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-white);
   margin-bottom: 20px;
 }
 
 /* Submit Button Styles */
 .button.submit-button {
   background: linear-gradient(135deg, var(--color-bright-pink), var(--color-vivid-purple));
-  padding: 15px 40px; /* Increased padding for submit button */
+  padding: 15px 40px;
   font-size: 16px;
   border-radius: 6px;
 }
 
 .button.submit-button:hover {
-  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink)); /* Reverse gradient on hover */
+  background: linear-gradient(135deg, var(--color-vivid-purple), var(--color-bright-pink));
 }
 
 /* Alert Styles */
@@ -417,7 +416,7 @@ a:hover {
   }
   
   .header-left {
-    max-width: 100%;
+    max-width: 70%;
   }
   
   nav a {
@@ -436,7 +435,7 @@ a:hover {
 
   .aavegotchi-info {
     padding: 15px;
-    max-height: 300px; /* Adjusted max-height for smaller screens */
+    max-height: 300px;
   }
 
   .aavegotchi-table th,
@@ -447,17 +446,21 @@ a:hover {
 
 @media (max-width: 768px) {
   header {
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: flex-start;
   }
 
-  .header-left, #connect-wallet {
-    width: 100%;
+  .header-left {
+    max-width: 100%;
+    flex: 1 0 100%;
+    order: 1;
   }
 
   #connect-wallet {
-    margin-top: 1rem;
-    align-self: center;
+    order: 2;
+    align-self: flex-start;
+    margin-top: 0;
+    margin-left: auto;
   }
 
   nav a {
@@ -486,7 +489,7 @@ a:hover {
 
   /* Adjusted for mobile UI enhancements */
   header h1 {
-    font-size: 24px; /* Reduced font size for smaller screens */
+    font-size: 24px;
   }
 
   .aavegotchi-info h2 {
@@ -509,25 +512,21 @@ a:hover {
 
 /* Additional Adjustments for Small Screens */
 @media (max-width: 600px) {
-  /* Reduce padding and font sizes in table cells */
   .aavegotchi-table th,
   .aavegotchi-table td {
     padding: 5px;
     font-size: 12px;
   }
 
-  /* Ensure table fits within the viewport */
   .aavegotchi-table {
     width: 100%;
   }
 
-  /* Ensure table cells wrap text */
   .aavegotchi-table th,
   .aavegotchi-table td {
     word-break: break-word;
   }
 
-  /* Adjust heading sizes */
   header h1 {
     font-size: 20px;
   }
@@ -536,9 +535,8 @@ a:hover {
     font-size: 16px;
   }
 
-  /* Adjust .aavegotchi-info max-height */
   .aavegotchi-info {
-    max-height: 300px; /* Adjust as needed */
+    max-height: 300px;
   }
 }
 

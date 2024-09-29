@@ -260,9 +260,7 @@ function generateMethodForms() {
   }
 
   const mainMethodNames = ['transferEscrow'];
-  // ... rest remains the same as previous code
 
-  // Generate forms (same as before)
   mainMethodNames.forEach((methodName) => {
     const method = facetMethods[methodName];
     const formContainer = document.createElement('div');
@@ -514,9 +512,6 @@ async function handleFormSubmit(event) {
     alert(`Error: ${error.data?.message || error.message}`);
   }
 }
-
-// Function to Toggle Collapse
-// ... (same as before)
 
 // Function to Fetch and Display Aavegotchis
 async function fetchAndDisplayAavegotchis(ownerAddress) {
