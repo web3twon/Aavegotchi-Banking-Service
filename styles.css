@@ -122,6 +122,7 @@ header p {
   /* Added max-height and overflow for scrollable content */
   max-height: 400px; /* Adjust this value as needed */
   overflow-y: auto;
+  overflow-x: auto; /* Added horizontal scrolling */
 }
 
 .aavegotchi-info h2 {
@@ -135,6 +136,7 @@ header p {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  min-width: 600px; /* Ensures table doesn't shrink too small */
 }
 
 .aavegotchi-table th,
@@ -494,50 +496,8 @@ a:hover {
   }
 }
 
-/* Mobile Styles for Tables */
-@media (max-width: 770px) {
-  /* Adjusting table for mobile devices */
-  .aavegotchi-table, .aavegotchi-table thead, .aavegotchi-table tbody, .aavegotchi-table th, .aavegotchi-table td, .aavegotchi-table tr {
-    display: block;
-  }
-
-  .aavegotchi-table {
-    border: none;
-  }
-
-  .aavegotchi-table tr {
-    margin-bottom: 0.5rem; /* Reduced margin between rows */
-  }
-
-  .aavegotchi-table td {
-    border: none;
-    position: relative;
-    padding-left: 50%;
-    text-align: left;
-    padding-top: 5px; /* Reduced padding for tighter spacing */
-    padding-bottom: 5px;
-  }
-
-  .aavegotchi-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 45%;
-    padding-left: 1rem;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .aavegotchi-table th {
-    display: none;
-  }
-
-  .aavegotchi-table td a {
-    word-break: break-all;
-  }
-
+/* Ensure the table remains in tabular format on mobile devices */
+@media (max-width: 600px) {
   /* Adjust font sizes */
   header h1 {
     font-size: 28px;
@@ -567,7 +527,24 @@ a:hover {
 
   /* Adjusted max-height for mobile devices */
   .aavegotchi-info {
-    max-height: 250px; /* Adjust this value as needed */
+    max-height: 400px; /* Same as desktop */
+  }
+
+  /* Ensure table elements maintain their display properties */
+  .aavegotchi-table, .aavegotchi-table thead, .aavegotchi-table tbody, .aavegotchi-table tr, .aavegotchi-table th, .aavegotchi-table td {
+    display: table; /* Ensure display remains as table elements */
+  }
+
+  .aavegotchi-table tr {
+    display: table-row;
+  }
+
+  .aavegotchi-table th, .aavegotchi-table td {
+    display: table-cell;
+  }
+
+  .aavegotchi-table td::before {
+    content: none; /* Remove pseudo-elements if any */
   }
 }
 
