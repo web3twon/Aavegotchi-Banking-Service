@@ -180,7 +180,7 @@ nav {
 }
 
 nav a {
-  color: #FFA3B3;
+  color: #ffa3b3;
   text-decoration: none;
   font-weight: bold;
   transition: color var(--transition-speed);
