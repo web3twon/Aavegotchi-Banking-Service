@@ -45,7 +45,6 @@ header {
   align-items: flex-start;
   background-color: var(--color-soft-purple);
   border-bottom: 2px solid var(--color-vivid-purple);
-  flex-wrap: wrap;
 }
 
 .footer {
@@ -446,21 +445,20 @@ a:hover {
 
 @media (max-width: 768px) {
   header {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
   }
 
   .header-left {
-    max-width: 100%;
-    flex: 1 0 100%;
+    max-width: 70%;
     order: 1;
   }
 
   #connect-wallet {
     order: 2;
-    align-self: flex-start;
-    margin-top: 0;
     margin-left: auto;
+    align-self: flex-start;
   }
 
   nav a {
@@ -481,13 +479,12 @@ a:hover {
     font-size: 1.2rem;
   }
 
-  .button {
+  .button.submit-button {
     width: 100%;
     padding: 15px;
     font-size: 1rem;
   }
 
-  /* Adjusted for mobile UI enhancements */
   header h1 {
     font-size: 24px;
   }
