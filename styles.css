@@ -232,6 +232,29 @@ a:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Max Button Styles */
+.max-button {
+  background: none;
+  border: none;
+  color: var(--color-bright-pink);
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: color var(--transition-speed), background-color var(--transition-speed);
+  border-radius: var(--border-radius);
+}
+
+.max-button:hover {
+  color: var(--color-white);
+  background-color: rgba(233, 30, 99, 0.2);
+}
+
+.max-button:focus {
+  outline: none;
+}
+
 /* Copy Button Styles */
 .copy-button {
   background: none;
@@ -318,6 +341,11 @@ a:hover {
   font-size: 16px;
 }
 
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
 /* Form Container */
 .form-container {
   background-color: var(--color-soft-purple);
@@ -334,6 +362,15 @@ a:hover {
   font-size: 24px;
   font-weight: 600;
   color: var(--color-white);
+  margin-bottom: 20px;
+}
+
+/* Inner Form Container for Extra Tools */
+.form-container-inner {
+  background-color: var(--color-soft-purple);
+  padding: 15px;
+  border: 1px solid var(--color-vivid-purple);
+  border-radius: var(--border-radius);
   margin-bottom: 20px;
 }
 
@@ -507,7 +544,6 @@ a:hover {
   }
 }
 
-/* Additional Adjustments for Small Screens */
 @media (max-width: 600px) {
   .aavegotchi-table th,
   .aavegotchi-table td {
