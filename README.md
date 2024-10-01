@@ -1,2 +1,3 @@
-# my-wallet
-First Version Of a Wallet for Aaavegotchi
+# Aavegotchi-Banking-Service
+
+Wallet UI for Aaavegotchi Pocket/Escrow accounts
